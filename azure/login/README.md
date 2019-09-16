@@ -1,8 +1,8 @@
 # Azure
 * The Azure Command-Line Interface (CLI) | Microsoft Docs
-(https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
+https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
 * Microsoft Azure Documentation | Microsoft Docs
-(https://docs.microsoft.com/en-us/azure/#pivot=sdkstools)
+https://docs.microsoft.com/en-us/azure/#pivot=sdkstools
 ## Actions
 ### Login
 1. Open command line session using Terminal/xterm/putty or equiv
