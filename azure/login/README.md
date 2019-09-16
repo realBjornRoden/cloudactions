@@ -10,7 +10,7 @@
 ```
 $ az login
 ```
-1. Use the `az` command to perform operations, or use the Azure Portal webui
+1. Use the `az` command to perform operations, or use the [Azure Portal](https://portal.azure.com/)
 ```
 $ az -help
 
