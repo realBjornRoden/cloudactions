@@ -1,4 +1,4 @@
-# Azure
+# Azure Login
 * The Azure Command-Line Interface (CLI) | Microsoft Docs
 [azure-cli-lates](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
 * Microsoft Azure Documentation | Microsoft Docs
