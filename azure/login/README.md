@@ -1,6 +1,6 @@
 # Azure
 * The Azure Command-Line Interface (CLI) | Microsoft Docs
-https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest
+[azure-cli-lates](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
 * Microsoft Azure Documentation | Microsoft Docs
 https://docs.microsoft.com/en-us/azure/#pivot=sdkstools
 ## Actions
