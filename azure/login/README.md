@@ -1,12 +1,16 @@
-* Azure
-*** The Azure Command-Line Interface (CLI) | Microsoft Docs
+# Azure
+* The Azure Command-Line Interface (CLI) | Microsoft Docs
 (https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
-*** Microsoft Azure Documentation | Microsoft Docs
+* Microsoft Azure Documentation | Microsoft Docs
 (https://docs.microsoft.com/en-us/azure/#pivot=sdkstools)
-** Actions
-*** Login
+## Actions
+### Login
 1. Open command line session using Terminal/xterm/putty or equiv
 1. Run the az command to authenticate through the webui using a Microsoft Account and Password
+```
+$ az login
+```
+1. Use the az command to perform operations, or use the Azure Portal webui
 ```
 $ az login
 ```
