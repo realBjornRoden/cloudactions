@@ -3,6 +3,7 @@
 		"type": "String",
 		"metadata": {
 			"description": "Pattern to use for names. Can include ? for letters and # for numbers."
-		}
+		},
+		"defaultValue": "*"
 	}
 }
