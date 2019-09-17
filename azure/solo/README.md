@@ -1,6 +1,10 @@
 # Create SOLO CentOS Linux Virtual Machine (VM)
 * The Azure Command-Line Interface (CLI) | Microsoft Docs
 [azure-cli-lates](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
+* Azure CLI Query with JMESPath
+[azure-query](https://techcommunity.microsoft.com/t5/ITOps-Talk-Blog/How-to-query-Azure-resources-using-the-Azure-CLI/ba-p/360147)
+* JMESPath Query
+[jmespath-query](http://jmespath.org/examples.html)
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Run the `az` command to authenticate through the webui using a Microsoft Account and Password
@@ -60,7 +64,7 @@ vm-solo-03NSG                                         rg-eastus-01              
 vm-solo-03PublicIP                                    rg-eastus-01                      eastus        Microsoft.Network/publicIPAddresses
 vm-solo-03VNET                                        rg-eastus-01                      eastus        Microsoft.Network/virtualNetworks
 ```
-1. Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
+* Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
 ```
 $ az account list-locations --output table
 DisplayName           Latitude    Longitude    Name
@@ -104,7 +108,7 @@ Switzerland West      46.204391   6.143158     switzerlandwest
 Germany North         53.073635   8.806422     germanynorth
 Germany West Central  50.110924   8.682127     germanywestcentral
 ```
-1. Prepare deciding the VM size using the `az resource list-locations` command, in this case selecting only 'Standard_B'
+* Prepare deciding the VM size using the `az resource list-locations` command, in this case selecting only 'Standard_B'
 ```
 $ az vm list-sizes --subscription 8e79d269-e904-4c8e-a3d8-5503f0e310e7 --location eastus --query "sort_by([?contains(name,'Standard_B')].{Name:name,Cores:numberOfCores,MB:memoryInMb},&Cores)" --output table
 Name            Cores    MB
@@ -120,7 +124,7 @@ Standard_B12ms  12       49152
 Standard_B16ms  16       65536
 Standard_B20ms  20       81920
 ```
-1. Prepare deciding the ADMIN account using the `az vm list` command with `--query` option
+* Prepare deciding the ADMIN account using the `az vm list` command with `--query` option
 ```
 $ az vm list --resource-group rg-eastus-01 --query "[?storageProfile.osDisk.osType=='Linux'].{Name:name,  admin:osProfile.adminUsername}" --output table
 Name        Admin
