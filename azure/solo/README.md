@@ -108,7 +108,23 @@
    ----------  ---------------  ------------  -------------  -------  ----------  -------
    vm-solo-03  RG-EASTUS-01     VM running    13.68.223.143           eastus
    ```
-
+1. Use the `az vm start` command to start a stopped or deallocated VM
+   ```
+   $ az vm start --resource-group rg-eastus-01 --name vm-solo-03 &
+   
+   $ while :;do az vm list -d --output table;sleep 5;done
+      Name        ResourceGroup    PowerState      PublicIps      Fqdns    Location    Zones
+   ----------  ---------------  --------------  -------------  -------  ----------  -------
+   vm-solo-03  RG-EASTUS-01     VM running      13.68.223.143           eastus
+   ...
+   Name        ResourceGroup    PowerState      PublicIps    Fqdns    Location    Zones
+   ----------  ---------------  --------------  -----------  -------  ----------  -------
+   vm-solo-03  RG-EASTUS-01     VM deallocated                        eastus
+   ...
+   Name        ResourceGroup    PowerState    PublicIps       Fqdns    Location    Zones
+   ----------  ---------------  ------------  --------------  -------  ----------  -------
+   vm-solo-03  RG-EASTUS-01     VM running    40.121.193.177           eastus
+   ```
 ***
 * Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
 ```
