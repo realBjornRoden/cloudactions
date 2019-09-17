@@ -126,6 +126,10 @@
    ----------  ---------------  ------------  --------------  -------  ----------  -------
    vm-solo-03  RG-EASTUS-01     VM running    40.121.193.177           eastus
    ```
+1. Use the `az group delete` command to delete a RESOURCE GROUP and **all** resources assigned to it, here without confirmation (`--yes` flag)
+    ```
+    $ az group delete --name rg-eastus-01 --yes
+    ```
 ***
 * Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
 ```
