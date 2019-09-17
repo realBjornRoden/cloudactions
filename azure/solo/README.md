@@ -107,13 +107,20 @@
    Warning: Permanently added '40.87.10.112' (ECDSA) to the list of known hosts.
    [bjro@vm-solo-03 ~]$ 
    ```
-   1. Customize the login environment on the VM
+   Customize the login environment on the VM
    ```
-   $ cat >> .bash_profile
+   [bjro@vm-solo-03 ~]$ cat >> .bash_profile
    export LC_CTYPE=C
    export EDITOR=vi
    export VISUAL=vi
    <CTRL-D>
+   cat >> .bashrc
+   export PS1="\u@\h:\w $ "
+   #export PS1="$LOGNAME@$(hostname -s):\$PWD $ "
+   <CTRL-D>
+   [bjro@vm-solo-03 ~]$ . ./.bash_profile
+   [bjro@vm-solo-03 ~]$ . ./.bashrc
+   bjro@vm-solo-03:~ $ exit
    ```
 ***
 * Use the `az vm stop` command to shutdown a VM
