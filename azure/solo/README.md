@@ -66,6 +66,12 @@
     vm-solo-03PublicIP                                    rg-eastus-01                      eastus        Microsoft.Network/publicIPAddresses
     vm-solo-03VNET                                        rg-eastus-01                      eastus        Microsoft.Network/virtualNetworks
     ```
+1. Use the `az vm show` command to display the VM DISK ID
+    ```
+    $ az vm show -g rg-eastus-01 -n vm-solo-03 --query "storageProfile.osDisk.managedDisk.id" -o tsv
+    /subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/rg-eastus-01/providers/Microsoft.Compute/disks/vm-solo-03_OsDisk_1_b3180d7e75c54767ba5222f2c34494de
+    ```
+
 ***
 * Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
 ```
@@ -127,6 +133,14 @@ Standard_B12ms  12       49152
 Standard_B16ms  16       65536
 Standard_B20ms  20       81920
 ```
+* Prepare deciding the VM IMAGE using the `az vm image list` command, in this case selecting only 'CentOS'
+```
+$ az vm image list --location eastus --offer centos --output table
+You are viewing an offline list of images, use --all to retrieve an up-to-date list
+Offer    Publisher    Sku    Urn                          UrnAlias    Version
+-------  -----------  -----  ---------------------------  ----------  ---------
+CentOS   OpenLogic    7.5    OpenLogic:CentOS:7.5:latest  CentOS      latest
+```
 * Prepare deciding the ADMIN account using the `az vm list` command with `--query` option
 ```
 $ az vm list --resource-group rg-eastus-01 --query "[?storageProfile.osDisk.osType=='Linux'].{Name:name,  admin:osProfile.adminUsername}" --output table
@@ -134,6 +148,7 @@ Name        Admin
 ----------  -------
 vm-solo-03  bjro
 ```
+***
 * Use the `az vm create -h` command to show options
 ```
 $ az vm create -h
