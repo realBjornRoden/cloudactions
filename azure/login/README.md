@@ -6,10 +6,10 @@
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Run the `az login` command to authenticate through the webui using a Microsoft Account and Password
-```
-$ az login
-```
-1. Use the `az` command to perform operations, or use the [Azure Portal](https://portal.azure.com/)
+    ```
+    $ az login
+    ```
+* Use the `az` command to perform operations, or use the [Azure Portal](https://portal.azure.com/)
 ```
 $ az -help
 
