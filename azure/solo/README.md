@@ -8,10 +8,12 @@
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Run the `az` command to authenticate through the webui using a Microsoft Account and Password
+
 ```
 $ az login
 ```
 1. Use the `az group create` command to create a RESOURCE GROUP to host the VM and its other resources
+
 ```
 $ az group create --name rg-eastus-01 --location eastus
 {
@@ -27,6 +29,7 @@ $ az group create --name rg-eastus-01 --location eastus
 }
 ```
 1. Use the `az vm create` command to create a VM
+
 ```
 $ time az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys
 {
