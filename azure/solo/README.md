@@ -109,18 +109,210 @@
    ```
    Customize the login environment on the VM
    ```
-   [bjro@vm-solo-03 ~]$ cat >> .bash_profile
+   [bjro@vm-solo-03 ~]$ cat >> .bashrc
    export LC_CTYPE=C
-   export EDITOR=vi
-   export VISUAL=vi
-   <CTRL-D>
-   cat >> .bashrc
    export PS1="\u@\h:\w $ "
-   #export PS1="$LOGNAME@$(hostname -s):\$PWD $ "
+   set -o vi
    <CTRL-D>
-   [bjro@vm-solo-03 ~]$ . ./.bash_profile
+  
    [bjro@vm-solo-03 ~]$ . ./.bashrc
+  
+   bjro@vm-solo-03:~ $ sudo yum -y update
+   Loaded plugins: fastestmirror, langpacks
+   Loading mirror speeds from cached hostfile
+   No packages marked for update
+   
+   bjro@vm-solo-03:~ $ sudo yum -y install gcc
+   Loaded plugins: fastestmirror, langpacks
+   Loading mirror speeds from cached hostfile
+   Resolving Dependencies
+   ...
+   Complete!
+   
+   bjro@vm-solo-03:~ $ gcc --version
+   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-36)
+   Copyright (C) 2015 Free Software Foundation, Inc.
+   This is free software; see the source for copying conditions.  There is NO
+   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   bjro@vm-solo-03:~ $ python --version
+   Python 2.7.5
+   
+   bjro@vm-solo-03:~ $ sudo bash
+   
+   root@vm-solo-03:/home/bjro $ cat > /etc/yum.repos.d/nginx.repo
+   [nginx]
+   name=nginx repo
+   baseurl=http://nginx.org/packages/mainline/centos/7/$basearch/
+   gpgcheck=0
+   enabled=1
+   
+   root@vm-solo-03:/home/bjro $ yum -y install nginx
+   Loaded plugins: fastestmirror, langpacks
+   Loading mirror speeds from cached hostfile
+   nginx                                            | 2.9 kB  00:00:00     
+   nginx/x86_64/primary_db                          | 154 kB  00:00:00     
+   Resolving Dependencies
+   ...
+   Complete!
+   
+   root@vm-solo-03:/home/bjro $ systemctl enable nginx
+   Created symlink from /etc/systemd/system/multi-user.target.wants/nginx.service to /usr/lib/systemd/system/nginx.service.
+   
+   root@vm-solo-03:/home/bjro $ systemctl start nginx
+   
+   root@vm-solo-03:/home/bjro $ netstat -an|grep 'tcp.*80'
+   tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN     
+   
+   root@vm-solo-03:/home/bjro $ curl --silent -q http://40.87.10.112:80 | grep -i welcome
+   <title>Welcome to nginx!</title>
+   <h1>Welcome to nginx!</h1>
+  
+   bjro@vm-solo-03:~ $ firewall-cmd --state
+   not running
+
    bjro@vm-solo-03:~ $ exit
+   ```
+   Open port 80 for the VM with the associated NSG (Network Security Group)
+   ```
+   $ az vm open-port --port 80 --resource-group rg-eastus-01 --name vm-solo-03 --output table
+   Location    Name           ProvisioningState    ResourceGroup    ResourceGuid
+   ----------  -------------  -------------------  ---------------  ------------------------------------
+   eastus      vm-solo-03NSG  Succeeded            rg-eastus-01     80b1b024-e6b9-44d2-9a6b-edd1c2c24aa2
+  
+   $ curl --silent -q http://40.87.10.112:80 | grep -i welcome
+   <title>Welcome to nginx!</title>
+   <h1>Welcome to nginx!</h1>
+   
+   $ ssh 40.87.10.112
+     
+   bjro@vm-solo-03:~ $ sudo systemctl start mariadb
+   bjro@vm-solo-03:~ $ sudo systemctl enable mariadb
+   Created symlink from /etc/systemd/system/multi-user.target.wants/mariadb.service to /usr/lib/systemd/system/mariadb.service.
+   bjro@vm-solo-03:~ $ sudo systemctl status mariadb
+   * mariadb.service - MariaDB database server
+      Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; vendor preset: disabled)
+      Active: active (running) since Tue 2019-09-17 12:52:53 UTC; 23s ago
+   ...
+   Sep 17 12:52:53 vm-solo-03 systemd[1]: Started MariaDB database server.
+
+   bjro@vm-solo-03:~ $ sudo mysql_secure_installation
+   
+   NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
+         SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+   
+   In order to log into MariaDB to secure it, we'll need the current
+   password for the root user.  If you've just installed MariaDB, and
+   you haven't set the root password yet, the password will be blank,
+   so you should just press enter here.
+   
+   Enter current password for root (enter for none): 
+   OK, successfully used password, moving on...
+   
+   Setting the root password ensures that nobody can log into the MariaDB
+   root user without the proper authorisation.
+   
+   Set root password? [Y/n] 
+   New password: 
+   Re-enter new password: 
+   Password updated successfully!
+   Reloading privilege tables..
+    ... Success!
+   
+   By default, a MariaDB installation has an anonymous user, allowing anyone
+   to log into MariaDB without having to have a user account created for
+   them.  This is intended only for testing, and to make the installation
+   go a bit smoother.  You should remove them before moving into a
+   production environment.
+   
+   Remove anonymous users? [Y/n] 
+    ... Success!
+   
+   Normally, root should only be allowed to connect from 'localhost'.  This
+   ensures that someone cannot guess at the root password from the network.
+   
+   Disallow root login remotely? [Y/n] 
+    ... Success!
+
+   By default, MariaDB comes with a database named 'test' that anyone can
+   access.  This is also intended only for testing, and should be removed
+   before moving into a production environment.
+   
+   Remove test database and access to it? [Y/n] 
+    - Dropping test database...
+    ... Success!
+    - Removing privileges on test database...
+    ... Success!
+   
+   Reloading the privilege tables will ensure that all changes made so far
+   will take effect immediately.
+   
+   Reload privilege tables now? [Y/n] 
+    ... Success!
+   
+   Cleaning up...
+   
+   All done!  If you've completed all of the above steps, your MariaDB
+   installation should now be secure.
+   
+   Thanks for using MariaDB!
+
+   bjro@vm-solo-03:~ $ awk -F: '{printf "%d,%s\n",$3,$1}' /etc/passwd >/tmp/users.csv
+   
+   bjro@vm-solo-03:~ $ mysql -u root -p
+   Enter password: 
+   Welcome to the MariaDB monitor.  Commands end with ; or \g.
+   Your MariaDB connection id is 13
+   Server version: 5.5.60-MariaDB MariaDB Server
+   
+   Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+   
+   Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+   
+   MariaDB [(none)]> CREATE DATABASE userdb;
+   Query OK, 1 row affected (0.00 sec)
+   
+   MariaDB [(none)]> MariaDB [(none)]> USE userdb;
+   Database changed
+   
+   MariaDB [userdb]> CREATE TABLE IF NOT EXISTS users (
+    ->     id INT PRIMARY KEY,
+    ->     name VARCHAR(8) NOT NULL,
+    ->     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -> ); 
+   Query OK, 0 rows affected (0.02 sec)
+   
+   MariaDB [userdb]> LOAD DATA LOCAL INFILE "/tmp/users.csv"
+       -> INTO TABLE users
+       -> FIELDS TERMINATED BY ","
+       -> LINES TERMINATED BY "\n" ;
+   Query OK, 27 rows affected, 29 warnings (0.01 sec)   
+   Records: 27  Deleted: 0  Skipped: 0  Warnings: 29
+   
+   MariaDB [userdb]> SELECT * FROM users;
+   +------+----------+---------------------+
+   | id   | name     | created_at          |
+   +------+----------+---------------------+
+   |    0 | root     | 2019-09-17 13:19:41 |
+   |    1 | bin      | 2019-09-17 13:19:41 |
+   |    2 | daemon   | 2019-09-17 13:19:41 |
+   |    3 | adm      | 2019-09-17 13:19:41 |
+   ...
+   | 1000 | bjro     | 2019-09-17 13:19:41 |
+   +------+----------+---------------------+
+   27 rows in set (0.00 sec)
+
+   MariaDB [userdb]> DROP TABLE users;
+   Query OK, 0 rows affected (0.00 sec)
+   
+   MariaDB [users]> DROP DATABASE users;
+   Query OK, 0 rows affected (0.00 sec)
+   
+   MariaDB [(none)]> exit
+   Bye
+   
+   bjro@vm-solo-03:~ $ 
+
+   $
    ```
 ***
 * Use the `az vm stop` command to shutdown a VM
