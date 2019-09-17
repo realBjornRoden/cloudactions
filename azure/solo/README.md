@@ -41,6 +41,7 @@ user	0m1.494s
 sys	0m0.208s
 ```
 1. Use the `az vm show --show-details` command to display IP-address of the VM
+```
 $ az vm show --show-details --resource-group rg-eastus-01 --name vm-solo-03 --output table
 Name        ResourceGroup    PowerState    PublicIps      Fqdns    Location    Zones
 ----------  ---------------  ------------  -------------  -------  ----------  -------
