@@ -72,13 +72,13 @@
     /subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/rg-eastus-01/providers/Microsoft.Compute/disks/vm-solo-03_OsDisk_1_b3180d7e75c54767ba5222f2c34494de
     ```
 ***
-1. Use the `az vm stop` command to shutdown a VM
+* Use the `az vm stop` command to shutdown a VM
     ```
     $ az vm stop --resource-group rg-eastus-01 --name vm-solo-02
     About to power off the specified VM...
     It will continue to be billed. To deallocate a VM, run: az vm deallocate.
     ```
-1. Use the `az vm deallocate` command to deallocate a VM
+* Use the `az vm deallocate` command to deallocate a VM
    ```
    $ az vm deallocate --resource-group rg-eastus-01 --name vm-solo-02 &
    
@@ -94,7 +94,7 @@
    vm-solo-02  RG-EASTUS-01     VM deallocated                          eastus
    vm-solo-03  RG-EASTUS-01     VM running      13.68.223.143           eastus
    ```
-1. Use the `az vm delete` command to delete a VM, not prompted for confirmation (`--yes` flag)
+* Use the `az vm delete` command to delete a VM, not prompted for confirmation (`--yes` flag)
    ```
    $ az vm delete --yes --resource-group rg-eastus-01 --name vm-solo-02 &
    
@@ -109,7 +109,7 @@
    ----------  ---------------  ------------  -------------  -------  ----------  -------
    vm-solo-03  RG-EASTUS-01     VM running    13.68.223.143           eastus
    ```
-1. Use the `az vm start` command to start a stopped or deallocated VM
+* Use the `az vm start` command to start a stopped or deallocated VM
    ```
    $ az vm start --resource-group rg-eastus-01 --name vm-solo-03 &
    
