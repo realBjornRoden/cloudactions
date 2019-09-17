@@ -26,23 +26,20 @@
       "type": null
     }
     ```
+1. Use the `az group list` command to display available RESOURCE GROUPS
+    ```
+    $ az group list --output table
+    Name                              Location      Status
+    --------------------------------  ------------  ---------
+    rg-eastus-01                      eastus        Succeeded
+    ...
+    ```
 1. Use the `az vm create` command to create a VM
     ```
-    $ time az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys
-    {
-      "fqdns": "",
-      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-eastus-01/providers/Microsoft.Compute/virtualMachines/vm-solo-03",
-      "location": "eastus",
-      "macAddress": "00-0D-3A-1E-D2-CB",
-      "powerState": "VM running",
-      "privateIpAddress": "10.0.0.4",
-      "publicIpAddress": "13.68.223.143",
-      "resourceGroup": "rg-eastus-01",
-      "zones": ""
-    }
-    real	2m16.068s
-    user	0m1.494s
-    sys	0m0.208s
+    $ az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys --output table
+    ResourceGroup    PowerState    PublicIpAddress    Fqdns    PrivateIpAddress    MacAddress         Location    Zones
+    ---------------  ------------  -----------------  -------  ------------------  -----------------  ----------  -------
+    rg-eastus-01     VM running    13.68.223.143               10.0.0.4            00-0D-3A-1E-D2-CB  eastus
     ```
 1. Use the `az vm show --show-details` command to display IP-address of the VM
     ```
@@ -51,6 +48,12 @@
     ----------  ---------------  ------------  -------------  -------  ----------  -------
     vm-solo-03  rg-eastus-01     VM running    13.68.223.143           eastus  
     ```
+1. Use the `az vm list-ip-addresses` command to display IP-address of the VM
+   ```
+   $ az vm list-ip-addresses --resource-group rg-eastus-01 --name vm-solo-03 --output table
+   VirtualMachine    PublicIPAddresses    PrivateIPAddresses
+   ----------------  -------------------  --------------------
+   vm-solo-03        13.68.223.143        10.0.0.4
 1. Use the `az resource list` command to display the account resources
     ```
     $ az resource list --output table
@@ -63,6 +66,7 @@
     vm-solo-03PublicIP                                    rg-eastus-01                      eastus        Microsoft.Network/publicIPAddresses
     vm-solo-03VNET                                        rg-eastus-01                      eastus        Microsoft.Network/virtualNetworks
     ```
+***
 * Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
 ```
 $ az account list-locations --output table
