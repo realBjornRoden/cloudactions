@@ -46,26 +46,40 @@
     $ az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys --output table
     ResourceGroup    PowerState    PublicIpAddress    Fqdns    PrivateIpAddress    MacAddress         Location    Zones
     ---------------  ------------  -----------------  -------  ------------------  -----------------  ----------  -------
-    rg-eastus-01     VM running    13.68.223.143               10.0.0.4            00-0D-3A-1E-D2-CB  eastus
+    rg-eastus-01     VM running    40.87.10.112                10.0.0.4            00-0D-3A-1E-D2-CB  eastus
     ```
     Or the same with the `--verbose` flag, note the use of the existing SSH public key
     ```
     $ az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys --output table --verbose
    Use existing SSH public key file: /Users/bjro/.ssh/id_rsa.pub
+   Accepted: vm-solo-03 (Microsoft.Compute/virtualMachines)
+   Succeeded: vm-solo-03VMNic (Microsoft.Network/networkInterfaces)
+   Accepted: vm-solo-03VNET (Microsoft.Network/virtualNetworks)
+   Accepted: vm-solo-03NSG (Microsoft.Network/networkSecurityGroups)
+   Accepted: vm-solo-03PublicIP (Microsoft.Network/publicIPAddresses)
+   Succeeded: vm-solo-03NSG (Microsoft.Network/networkSecurityGroups)
+   Succeeded: vm-solo-03PublicIP (Microsoft.Network/publicIPAddresses)
+   Succeeded: vm-solo-03VNET (Microsoft.Network/virtualNetworks)
+   Accepted: vm-solo-03 (Microsoft.Compute/virtualMachines)
+   ResourceGroup    PowerState    PublicIpAddress    Fqdns    PrivateIpAddress    MacAddress         Location    Zones
+   ---------------  ------------  -----------------  -------  ------------------  -----------------  ----------  -------
+   rg-eastus-01     VM running    40.87.10.112                10.0.0.4            00-0D-3A-1E-D2-CB  eastus
+   Suppress exception unknown locale: UTF-8
+   command ran in 132.913 seconds.
    ```
 1. Use the `az vm show --show-details` command to display IP-address of the VM
     ```
     $ az vm show --show-details --resource-group rg-eastus-01 --name vm-solo-03 --output table
     Name        ResourceGroup    PowerState    PublicIps      Fqdns    Location    Zones
     ----------  ---------------  ------------  -------------  -------  ----------  -------
-    vm-solo-03  rg-eastus-01     VM running    13.68.223.143           eastus  
+    vm-solo-03  rg-eastus-01     VM running    40.87.10.112           eastus  
     ```
 1. Use the `az vm list-ip-addresses` command to display IP-address of the VM
    ```
    $ az vm list-ip-addresses --resource-group rg-eastus-01 --name vm-solo-03 --output table
    VirtualMachine    PublicIPAddresses    PrivateIPAddresses
    ----------------  -------------------  --------------------
-   vm-solo-03        13.68.223.143        10.0.0.4
+   vm-solo-03        40.87.10.112        10.0.0.4
 1. Use the `az resource list` command to display the account resources
     ```
     $ az resource list --output table
@@ -83,6 +97,17 @@
     $ az vm show -g rg-eastus-01 -n vm-solo-03 --query "storageProfile.osDisk.managedDisk.id" -o tsv
     /subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/rg-eastus-01/providers/Microsoft.Compute/disks/vm-solo-03_OsDisk_1_b3180d7e75c54767ba5222f2c34494de
     ```
+
+1. Use SSH to login to the VM
+   ```
+   $ ssh 40.87.10.112
+   The authenticity of host '40.87.10.112 (40.87.10.112)' can't be established.
+   ECDSA key fingerprint is SHA256:UE4+kYUew2fY+1wSRyR3DV2WWlqxrbGe1KLX8lSiikI.
+   Are you sure you want to continue connecting (yes/no)? yes
+   Warning: Permanently added '40.87.10.112' (ECDSA) to the list of known hosts.
+   [bjro@vm-solo-03 ~]$ 
+   ```
+
 ***
 * Use the `az vm stop` command to shutdown a VM
     ```
@@ -98,13 +123,13 @@
    Name        ResourceGroup    PowerState       PublicIps      Fqdns    Location    Zones
    ----------  ---------------  ---------------  -------------  -------  ----------  -------
    vm-solo-02  RG-EASTUS-01     VM deallocating                          eastus
-   vm-solo-03  RG-EASTUS-01     VM running       13.68.223.143           eastus
+   vm-solo-03  RG-EASTUS-01     VM running       40.87.10.112            eastus
    $ sleep 240
    $ az vm list -d --output table
    Name        ResourceGroup    PowerState      PublicIps      Fqdns    Location    Zones
    ----------  ---------------  --------------  -------------  -------  ----------  -------
    vm-solo-02  RG-EASTUS-01     VM deallocated                          eastus
-   vm-solo-03  RG-EASTUS-01     VM running      13.68.223.143           eastus
+   vm-solo-03  RG-EASTUS-01     VM running      40.87.10.112            eastus
    ```
 * Use the `az vm delete` command to delete a VM, not prompted for confirmation (`--yes` flag)
    ```
@@ -114,12 +139,12 @@
    Name        ResourceGroup    PowerState      PublicIps      Fqdns    Location    Zones
    ----------  ---------------  --------------  -------------  -------  ----------  -------
    vm-solo-02  RG-EASTUS-01     VM deallocated                          eastus
-   vm-solo-03  RG-EASTUS-01     VM running      13.68.223.143           eastus
+   vm-solo-03  RG-EASTUS-01     VM running      40.87.10.112            eastus
    $ sleep 60
    $ az vm list -d --output table
    Name        ResourceGroup    PowerState    PublicIps      Fqdns    Location    Zones
    ----------  ---------------  ------------  -------------  -------  ----------  -------
-   vm-solo-03  RG-EASTUS-01     VM running    13.68.223.143           eastus
+   vm-solo-03  RG-EASTUS-01     VM running    40.87.10.112            eastus
    ```
 * Use the `az vm start` command to start a stopped or deallocated VM
    ```
@@ -128,11 +153,11 @@
    $ while :;do az vm list -d --output table;sleep 5;done
       Name        ResourceGroup    PowerState      PublicIps      Fqdns    Location    Zones
    ----------  ---------------  --------------  -------------  -------  ----------  -------
-   vm-solo-03  RG-EASTUS-01     VM running      13.68.223.143           eastus
+   vm-solo-03  RG-EASTUS-01     VM running      40.87.10.112            eastus
    ...
    Name        ResourceGroup    PowerState      PublicIps    Fqdns    Location    Zones
    ----------  ---------------  --------------  -----------  -------  ----------  -------
-   vm-solo-03  RG-EASTUS-01     VM deallocated                        eastus
+   vm-solo-03  RG-EASTUS-01     VM deallocated                         eastus
    ...
    Name        ResourceGroup    PowerState    PublicIps       Fqdns    Location    Zones
    ----------  ---------------  ------------  --------------  -------  ----------  -------
@@ -143,6 +168,7 @@
     $ az group delete --name rg-eastus-01 --yes
     ```
 ***
+
 * Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
 ```
 $ az account list-locations --output table
@@ -219,6 +245,7 @@ Name        Admin
 vm-solo-03  bjro
 ```
 ***
+
 * Use the `az vm create -h` command to show options
 ```
 $ az vm create -h
