@@ -26,7 +26,7 @@
       "type": null
     }
    ```
-   Same but with the `--output table` flag
+   Same but with the `--output table` flag (default is JSON formatted output)
    ```
    $ az group create --name rg-eastus-01 --location eastus --output table
    Location    Name
