@@ -4,9 +4,8 @@
 * Microsoft Azure Documentation | Microsoft Docs
 [azure-sdk-tools](https://docs.microsoft.com/en-us/azure/#pivot=sdkstools)
 ## Actions
-### Login
 1. Open a command line session using Terminal/xterm/putty or equiv
-1. Run the `az` command to authenticate through the webui using a Microsoft Account and Password
+1. Run the `az login` command to authenticate through the webui using a Microsoft Account and Password
 ```
 $ az login
 ```
