@@ -186,7 +186,7 @@
 
    bjro@vm-solo-03:~ $ exit
    ```
-   Open port 80 for the VM with the associated NSG (Network Security Group)
+   Open port 80 for the VM with the associated NSG (Network Security Group); verify access
    ```
    $ az vm open-port --port 80 --resource-group rg-eastus-01 --name vm-solo-03 --output table
    Location    Name           ProvisioningState    ResourceGroup    ResourceGuid
@@ -196,7 +196,9 @@
    $ curl --silent -q http://40.87.10.112:80 | grep -i welcome
    <title>Welcome to nginx!</title>
    <h1>Welcome to nginx!</h1>
-   
+   ```
+   Continue ustomize the VM...
+   ```
    $ ssh 40.87.10.112
      
    bjro@vm-solo-03:~ $ sudo systemctl start mariadb
