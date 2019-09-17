@@ -48,6 +48,11 @@
     ---------------  ------------  -----------------  -------  ------------------  -----------------  ----------  -------
     rg-eastus-01     VM running    13.68.223.143               10.0.0.4            00-0D-3A-1E-D2-CB  eastus
     ```
+    Or the same with the `--verbose` flag, note the use of the existing SSH public key
+    ```
+    $ az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys --output table --verbose
+   Use existing SSH public key file: /Users/bjro/.ssh/id_rsa.pub
+   ```
 1. Use the `az vm show --show-details` command to display IP-address of the VM
     ```
     $ az vm show --show-details --resource-group rg-eastus-01 --name vm-solo-03 --output table
