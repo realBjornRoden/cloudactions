@@ -130,7 +130,7 @@ Name        Admin
 ----------  -------
 vm-solo-03  bjro
 ```
-1. Use the `az vm create -h` command to show options
+* Use the `az vm create -h` command to show options
 ```
 $ az vm create -h
 
