@@ -8,11 +8,11 @@
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Run the `az` command to authenticate through the webui using a Microsoft Account and Password
-```
+  ```
 $ az login
-```
+  ```
 1. Use the `az group create` command to create a RESOURCE GROUP to host the VM and its other resources
-```
+  ```
 $ az group create --name rg-eastus-01 --location eastus
 {
   "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-eastus-01",
@@ -25,9 +25,9 @@ $ az group create --name rg-eastus-01 --location eastus
   "tags": null,
   "type": null
 }
-```
+  ```
 1. Use the `az vm create` command to create a VM
-```
+  ```
 $ time az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys
 {
   "fqdns": "",
@@ -43,17 +43,17 @@ $ time az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image Cent
 real	2m16.068s
 user	0m1.494s
 sys	0m0.208s
-```
+  ```
 1. Use the `az vm show --show-details` command to display IP-address of the VM
-```
+  ```
 $ az vm show --show-details --resource-group rg-eastus-01 --name vm-solo-03 --output table
 Name        ResourceGroup    PowerState    PublicIps      Fqdns    Location    Zones
 ----------  ---------------  ------------  -------------  -------  ----------  -------
 vm-solo-03  rg-eastus-01     VM running    13.68.223.143           eastus
-
+  
 ```
 1. Use the `az resource list` command to display the account resources
-```
+  ```
 $ az resource list --output table
 Name                                                  ResourceGroup                     Location      Type                                     Status
 ----------------------------------------------------  --------------------------------  ------------  ---------------------------------------  --------
@@ -63,7 +63,7 @@ vm-solo-03VMNic                                       rg-eastus-01              
 vm-solo-03NSG                                         rg-eastus-01                      eastus        Microsoft.Network/networkSecurityGroups
 vm-solo-03PublicIP                                    rg-eastus-01                      eastus        Microsoft.Network/publicIPAddresses
 vm-solo-03VNET                                        rg-eastus-01                      eastus        Microsoft.Network/virtualNetworks
-```
+  ```
 * Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
 ```
 $ az account list-locations --output table
