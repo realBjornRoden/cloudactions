@@ -136,6 +136,7 @@
    Copyright (C) 2015 Free Software Foundation, Inc.
    This is free software; see the source for copying conditions.  There is NO
    warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   
    bjro@vm-solo-03:~ $ python --version
    Python 2.7.5
    
