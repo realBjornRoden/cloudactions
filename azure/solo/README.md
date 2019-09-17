@@ -41,7 +41,7 @@
     rg-eastus-01                      eastus        Succeeded
     ...
     ```
-1. Use the `az vm create` command to create a VM
+1. Use the `az vm create` command to create a VM; by default SSH will be allowed (firewall rule `default-allow-ssh`)
     ```
     $ az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys --output table
     ResourceGroup    PowerState    PublicIpAddress    Fqdns    PrivateIpAddress    MacAddress         Location    Zones
@@ -107,7 +107,14 @@
    Warning: Permanently added '40.87.10.112' (ECDSA) to the list of known hosts.
    [bjro@vm-solo-03 ~]$ 
    ```
-
+   1. Customize the login environment on the VM
+   ```
+   $ cat >> .bash_profile
+   export LC_CTYPE=C
+   export EDITOR=vi
+   export VISUAL=vi
+   <CTRL-D>
+   ```
 ***
 * Use the `az vm stop` command to shutdown a VM
     ```
