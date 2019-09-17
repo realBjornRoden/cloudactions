@@ -25,6 +25,13 @@
       "tags": null,
       "type": null
     }
+   ```
+   Same but with the `--output table` flag
+   ```
+   $ az group create --name rg-eastus-01 --location eastus --output table
+   Location    Name
+   ----------  ------------
+   eastus      rg-eastus-01
     ```
 1. Use the `az group list` command to display available RESOURCE GROUPS
     ```
