@@ -1,4 +1,4 @@
-# Azure Create SOLO CentOS Linux Virtual Machine (VM)
+# Create SOLO CentOS Linux Virtual Machine (VM)
 * The Azure Command-Line Interface (CLI) | Microsoft Docs
 [azure-cli-lates](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
 ## Actions
