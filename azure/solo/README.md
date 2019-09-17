@@ -2,7 +2,6 @@
 * The Azure Command-Line Interface (CLI) | Microsoft Docs
 [azure-cli-lates](https://docs.microsoft.com/en-us/cli/azure/?view=azure-cli-latest)
 ## Actions
-### Login
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Run the `az` command to authenticate through the webui using a Microsoft Account and Password
 ```
