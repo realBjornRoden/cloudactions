@@ -121,6 +121,17 @@
    Loaded plugins: fastestmirror, langpacks
    Loading mirror speeds from cached hostfile
    No packages marked for update
+   
+   root@vm-solo-03:~ $ uname -a
+   Linux vm-solo-03 3.10.0-862.11.6.el7.x86_64 #1 SMP Tue Aug 14 21:49:04 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+   root@vm-solo-03:~ $ egrep -i 'processor|model n|cpu [mc]|flags' /proc/cpuinfo
+   processor	: 0
+   model name	: Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz
+   cpu MHz		: 2294.689
+   cpu cores	: 1
+   flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch fsgsbase bmi1 hle avx2 smep bmi2 erms invpcid rtm rdseed adx smap xsaveopt
+
    ```
    Customize the VM, such as installing software and basic verification that it's working
    ```
@@ -314,8 +325,31 @@
    Bye
    
    bjro@vm-solo-03:~ $ exit
-
-   $
+   ```
+   Clone the VM; deploy the cloned image of the VM; open firewall port 80; verify
+   ```
+   $ az vm deallocate --resource-group rg-eastus-01 --name vm-solo-03
+   
+   $ az vm generalize --resource-group rg-eastus-01 --name vm-solo-03
+   
+   $ az image create --resource-group rg-eastus-01 --source vm-solo-03 --name centos-mariadb-ngnix
+   
+   $ az vm create --resource-group rg-eastus-01 --name vm-solo-04 --image centos-mariadb-ngnix --admin-username bjro --ssh-key-value ~/.ssh/id_rsa.pub
+   
+   $ az vm list --show-details --resource-group rg-eastus-01 --output table
+   Name        ResourceGroup    PowerState      PublicIps      Fqdns    Location    Zones
+   ----------  ---------------  --------------  -------------  -------  ----------  -------
+   vm-solo-03  rg-eastus-01     VM deallocated                          eastus
+   vm-solo-04  rg-eastus-01     VM running      13.92.112.221           eastus
+   
+   $ az vm open-port --port 80 --resource-group rg-eastus-01 --name vm-solo-04 --output table
+   Location    Name           ProvisioningState    ResourceGroup    ResourceGuid
+   ----------  -------------  -------------------  ---------------  ------------------------------------
+   eastus      vm-solo-04NSG  Succeeded            rg-eastus-01     7ef18372-936b-411f-9853-59d7a999c5e5
+   
+   $ curl --silent -q http://13.92.112.221:80 | grep -i welcome
+   <title>Welcome to nginx!</title>
+   <h1>Welcome to nginx!</h1>
    ```
 ***
 * Use the `az vm stop` command to shutdown a VM
