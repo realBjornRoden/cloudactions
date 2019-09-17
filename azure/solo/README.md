@@ -9,7 +9,7 @@
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Run the `az` command to authenticate through the webui using a Microsoft Account and Password
   ```
-$ az login
+  $ az login
   ```
 1. Use the `az group create` command to create a RESOURCE GROUP to host the VM and its other resources
   ```
