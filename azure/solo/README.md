@@ -71,6 +71,7 @@
     $ az vm show -g rg-eastus-01 -n vm-solo-03 --query "storageProfile.osDisk.managedDisk.id" -o tsv
     /subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/rg-eastus-01/providers/Microsoft.Compute/disks/vm-solo-03_OsDisk_1_b3180d7e75c54767ba5222f2c34494de
     ```
+***
 1. Use the `az vm stop` command to shutdown a VM
     ```
     $ az vm stop --resource-group rg-eastus-01 --name vm-solo-02
