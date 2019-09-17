@@ -11,7 +11,7 @@ $ az login
 ```
 $ az group create --name rg-eastus-01 --location eastus
 {
-  "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/rg-eastus-01",
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-eastus-01",
   "location": "eastus",
   "managedBy": null,
   "name": "rg-eastus-01",
@@ -104,13 +104,21 @@ Switzerland West      46.204391   6.143158     switzerlandwest
 Germany North         53.073635   8.806422     germanynorth
 Germany West Central  50.110924   8.682127     germanywestcentral
 ```
-1. Prepare deciding the VM size using the `az resource list-locations` command
+1. Prepare deciding the VM size using the `az resource list-locations` command, in this case selecting only 'Standard_B'
 ```
-$ az vm list-sizes --subscription SUBSCRIPTIONID --location eastus --query "[].{Name:name,Cores:numberOfCores,MB:memoryInMb}" --output table 
-Name                    Cores    MB
-----------------------  -------  -------
-Standard_B1ls           1        512
-...
+$ az vm list-sizes --subscription 8e79d269-e904-4c8e-a3d8-5503f0e310e7 --location eastus --query "sort_by([?contains(name,'Standard_B')].{Name:name,Cores:numberOfCores,MB:memoryInMb},&Cores)" --output table
+Name            Cores    MB
+--------------  -------  -----
+Standard_B1ls   1        512
+Standard_B1ms   1        2048
+Standard_B1s    1        1024
+Standard_B2ms   2        8192
+Standard_B2s    2        4096
+Standard_B4ms   4        16384
+Standard_B8ms   8        32768
+Standard_B12ms  12       49152
+Standard_B16ms  16       65536
+Standard_B20ms  20       81920
 ```
 1. Prepare deciding the ADMIN account using the `az vm list` command with `--query` option
 ```
