@@ -323,18 +323,37 @@
    
    MariaDB [(none)]> exit
    Bye
-   
-   bjro@vm-solo-03:~ $ exit
    ```
    Clone the VM; deploy the cloned image of the VM; open firewall port 80; verify
    ```
+   bjro@vm-solo-03:~ $ sudo waagent -deprovision+user
+   WARNING! The waagent service will be stopped.
+   WARNING! All SSH host key pairs will be deleted.
+   WARNING! Cached DHCP leases will be deleted.
+   WARNING! root password will be disabled. You will not be able to login as root.
+   WARNING! /etc/resolv.conf will be deleted.
+   WARNING! bjro account and entire home directory will be deleted.
+   Do you want to proceed (y/n)y
+   2019/09/17 13:48:19.466884 INFO Examine /proc/net/route for primary interface
+   2019/09/17 13:48:19.471570 INFO Primary interface is [eth0]
+   
+   bjro@vm-solo-03:~ $ exit
+   
    $ az vm deallocate --resource-group rg-eastus-01 --name vm-solo-03
    
    $ az vm generalize --resource-group rg-eastus-01 --name vm-solo-03
    
-   $ az image create --resource-group rg-eastus-01 --source vm-solo-03 --name centos-mariadb-ngnix
+   $ az image create --resource-group rg-eastus-01 --source vm-solo-03 --name centos-mariadb-ngnix --output table
+   HyperVgeneration    Location    Name                  ProvisioningState    ResourceGroup
+   ------------------  ----------  --------------------  -------------------  ---------------
+   V1                  eastus      centos-mariadb-ngnix  Succeeded            rg-eastus-01
    
-   $ az vm create --resource-group rg-eastus-01 --name vm-solo-04 --image centos-mariadb-ngnix --admin-username bjro --ssh-key-value ~/.ssh/id_rsa.pub
+   $ az image list --output table
+   HyperVgeneration    Location    Name                  ProvisioningState    ResourceGroup
+   ------------------  ----------  --------------------  -------------------  ---------------
+   V1                  eastus      centos-mariadb-ngnix  Succeeded            RG-EASTUS-01
+   
+   $ az vm create --resource-group rg-eastus-01 --name vm-solo-04 --image centos-mariadb-ngnix --admin-username bjro --ssh-key-value ~/.ssh/id_rsa.pub --output table
    
    $ az vm list --show-details --resource-group rg-eastus-01 --output table
    Name        ResourceGroup    PowerState      PublicIps      Fqdns    Location    Zones
