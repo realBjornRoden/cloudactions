@@ -27,7 +27,7 @@ $ az group create --name rg-eastus-01 --location eastus
 $ time az vm create --resource-group rg-eastus-01 --name vm-solo-03 --image CentOS --admin-username bjro --generate-ssh-keys
 {
   "fqdns": "",
-  "id": "/subscriptions/8e79d269-e904-4c8e-a3d8-5503f0e310e7/resourceGroups/rg-eastus-01/providers/Microsoft.Compute/virtualMachines/vm-solo-03",
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-eastus-01/providers/Microsoft.Compute/virtualMachines/vm-solo-03",
   "location": "eastus",
   "macAddress": "00-0D-3A-1E-D2-CB",
   "powerState": "VM running",
@@ -47,6 +47,77 @@ Name        ResourceGroup    PowerState    PublicIps      Fqdns    Location    Z
 ----------  ---------------  ------------  -------------  -------  ----------  -------
 vm-solo-03  rg-eastus-01     VM running    13.68.223.143           eastus
 
+```
+1. Use the `az resource list` command to display the account resources
+```
+$ az resource list --output table
+Name                                                  ResourceGroup                     Location      Type                                     Status
+----------------------------------------------------  --------------------------------  ------------  ---------------------------------------  --------
+vm-solo-03_OsDisk_1_b3180d7e75c54767ba5222f2c34494de  RG-EASTUS-01                      eastus        Microsoft.Compute/disks
+vm-solo-03                                            rg-eastus-01                      eastus        Microsoft.Compute/virtualMachines
+vm-solo-03VMNic                                       rg-eastus-01                      eastus        Microsoft.Network/networkInterfaces
+vm-solo-03NSG                                         rg-eastus-01                      eastus        Microsoft.Network/networkSecurityGroups
+vm-solo-03PublicIP                                    rg-eastus-01                      eastus        Microsoft.Network/publicIPAddresses
+vm-solo-03VNET                                        rg-eastus-01                      eastus        Microsoft.Network/virtualNetworks
+```
+1. Prepare deciding the location for RESOURCE GROUP using the `az resource list-locations` command
+```
+$ az account list-locations --output table
+DisplayName           Latitude    Longitude    Name
+--------------------  ----------  -----------  ------------------
+East Asia             22.267      114.188      eastasia
+Southeast Asia        1.283       103.833      southeastasia
+Central US            41.5908     -93.6208     centralus
+East US               37.3719     -79.8164     eastus
+East US 2             36.6681     -78.3889     eastus2
+West US               37.783      -122.417     westus
+North Central US      41.8819     -87.6278     northcentralus
+South Central US      29.4167     -98.5        southcentralus
+North Europe          53.3478     -6.2597      northeurope
+West Europe           52.3667     4.9          westeurope
+Japan West            34.6939     135.5022     japanwest
+Japan East            35.68       139.77       japaneast
+Brazil South          -23.55      -46.633      brazilsouth
+Australia East        -33.86      151.2094     australiaeast
+Australia Southeast   -37.8136    144.9631     australiasoutheast
+South India           12.9822     80.1636      southindia
+Central India         18.5822     73.9197      centralindia
+West India            19.088      72.868       westindia
+Canada Central        43.653      -79.383      canadacentral
+Canada East           46.817      -71.217      canadaeast
+UK South              50.941      -0.799       uksouth
+UK West               53.427      -3.084       ukwest
+West Central US       40.890      -110.234     westcentralus
+West US 2             47.233      -119.852     westus2
+Korea Central         37.5665     126.9780     koreacentral
+Korea South           35.1796     129.0756     koreasouth
+France Central        46.3772     2.3730       francecentral
+France South          43.8345     2.1972       francesouth
+Australia Central     -35.3075    149.1244     australiacentral
+Australia Central 2   -35.3075    149.1244     australiacentral2
+UAE Central           24.466667   54.366669    uaecentral
+UAE North             25.266666   55.316666    uaenorth
+South Africa North    -25.731340  28.218370    southafricanorth
+South Africa West     -34.075691  18.843266    southafricawest
+Switzerland North     47.451542   8.564572     switzerlandnorth
+Switzerland West      46.204391   6.143158     switzerlandwest
+Germany North         53.073635   8.806422     germanynorth
+Germany West Central  50.110924   8.682127     germanywestcentral
+```
+1. Prepare deciding the VM size using the `az resource list-locations` command
+```
+$ az vm list-sizes --subscription SUBSCRIPTIONID --location eastus --query "[].{Name:name,Cores:numberOfCores,MB:memoryInMb}" --output table 
+Name                    Cores    MB
+----------------------  -------  -------
+Standard_B1ls           1        512
+...
+```
+1. Prepare deciding the ADMIN account using the `az vm list` command with `--query` option
+```
+$ az vm list --resource-group rg-eastus-01 --query "[?storageProfile.osDisk.osType=='Linux'].{Name:name,  admin:osProfile.adminUsername}" --output table
+Name        Admin
+----------  -------
+vm-solo-03  bjro
 ```
 1. Use the `az vm create -h` command to show options
 ```
