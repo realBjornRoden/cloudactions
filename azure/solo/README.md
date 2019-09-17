@@ -121,7 +121,9 @@
    Loaded plugins: fastestmirror, langpacks
    Loading mirror speeds from cached hostfile
    No packages marked for update
-   
+   ```
+   Customize the VM, such as installing software and basic verification that it's working
+   ```
    bjro@vm-solo-03:~ $ sudo yum -y install gcc
    Loaded plugins: fastestmirror, langpacks
    Loading mirror speeds from cached hostfile
@@ -304,13 +306,13 @@
    MariaDB [userdb]> DROP TABLE users;
    Query OK, 0 rows affected (0.00 sec)
    
-   MariaDB [users]> DROP DATABASE users;
+   MariaDB [userdb]> DROP DATABASE userdb;
    Query OK, 0 rows affected (0.00 sec)
    
    MariaDB [(none)]> exit
    Bye
    
-   bjro@vm-solo-03:~ $ 
+   bjro@vm-solo-03:~ $ exit
 
    $
    ```
