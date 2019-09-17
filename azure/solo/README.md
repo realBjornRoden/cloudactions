@@ -197,7 +197,7 @@
    <title>Welcome to nginx!</title>
    <h1>Welcome to nginx!</h1>
    ```
-   Continue ustomize the VM...
+   Continue customize the VM...
    ```
    $ ssh 40.87.10.112
      
