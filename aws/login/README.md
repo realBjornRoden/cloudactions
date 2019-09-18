@@ -36,7 +36,6 @@
    $ aws ec2 describe-instances --region us-east-1
    
    $ aws s3 ls
-   
    An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied
    ```
 ***
