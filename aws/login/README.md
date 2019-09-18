@@ -21,15 +21,15 @@
     ```
     $ aws configure
     aws configure
-    AWS Access Key ID [None]: AKIAYWZGLN25PCXEFF3G
-    AWS Secret Access Key [None]: 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
+    AWS Access Key ID [None]: AKIAYWZGLN25DEADBEEF
+    AWS Secret Access Key [None]: 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
     Default region name [None]: 
     Default output format [None]: text
 
    $ cat ~/.aws/credentials
    [default]
-   aws_access_key_id = AKIAYWZGLN25PCXEFF3G
-   aws_secret_access_key = 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
+   aws_access_key_id = AKIAYWZGLN25DEADBEEF
+   aws_secret_access_key = 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
     ```
 1. Verify access to AWS with the USER (`ec2admin`), for EC2 (accepted) and S3 (denied)
    ```
