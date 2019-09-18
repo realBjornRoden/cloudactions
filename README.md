@@ -1,9 +1,12 @@
 ## Topics
 ***
-* Remote access with SSH
-* Remote access with HTTPS
+* Login access with SSH
+   * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/login/README.md)
+   * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/login/README.md)
 ***
 * Create solo VM
+   * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/solo/README.md)
+   * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/solo/README.md)
 * Add, Change, Remove compute for solo VM
 * Add, Change, Remove storage for solo VM
 * Add, Change, Remove network for solo VM
