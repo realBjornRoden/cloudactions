@@ -208,7 +208,7 @@
    <title>Welcome to nginx!</title>
    <h1>Welcome to nginx!</h1>
    ```
-   Open port 80 for the VM with the associated SG ( Security Group); verify access
+   Open port 80 for the VM; verify access
    ```
    $ gcloud compute firewall-rules create --network=default default-allow-http --allow tcp:80 --project project-01-31482
    Creating firewall...⠧Created [https://www.googleapis.com/compute/v1/projects/project-01-31482/global/firewalls/default-allow-http].
@@ -220,7 +220,7 @@
    <title>Welcome to nginx!</title>
    <h1>Welcome to nginx!</h1>
    ```
-   Continue customize the VM...
+   Continue customizing the VM...
    ```
    $ gcloud compute ssh vm-solo-03 --zone=us-east1-b --project project-01-31482
 
@@ -290,9 +290,9 @@
    
    Thanks for using MariaDB!
   
-   bjro@vm-solo-03:~ $ awk -F: '{printf "%d,%s\n",$3,$1}' /etc/passwd >/tmp/users.csv
+   bjro@vm-solo-03:~$ awk -F: '{printf "%d,%s\n",$3,$1}' /etc/passwd >/tmp/users.csv
    
-   bjro@vm-solo-03:~ $ sudo mysql -u root -p
+   bjro@vm-solo-03:~$ sudo mysql -u root -p
    Enter password: 
    Welcome to the MariaDB monitor.  Commands end with ; or \g.
    Your MariaDB connection id is 11
@@ -344,7 +344,7 @@
    
    MariaDB [(none)]> exit
    Bye
-   bjro@vm-solo-03:~ $ exit
+   bjro@vm-solo-03:~$ exit
    ```
    Clone the VM; deploy the cloned image of the VM with open firewall port 80; verify
    ```
