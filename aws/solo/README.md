@@ -5,6 +5,10 @@
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Ensure login key configuration is made with  the `aws configure`
+1. (<i>optional)</i> Use the `aws ec2 create-placement-group` to create a PLACEMENT GROUP [aws-ec2-pg](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-placement-group.html)
+   ```
+   $ aws ec2 create-placement-group --group-name pg-useast-01 --strategy partition --partition-count 1 --region us-east-1
+   ```
 1. Use the `aws ec2 run-instances` command to create a VM; by default SSH will be allowed (firewall rule `XXXX`) [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
    ```
     ```
