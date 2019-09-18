@@ -1,5 +1,6 @@
 # Create SOLO Debian Linux Virtual Machine (VM)
-* The  Command-Line Interface ([CLI](https://cloud.google.com/sdk/docs/))
+* The  Command-Line Interface [SDK](https://cloud.google.com/sdk/docs/)
+* Google Compute Engine documentation [gcloud](https://cloud.google.com/compute/docs/)
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 
