@@ -4,8 +4,13 @@
 [aws-cli-configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
 * The AWS Shell 
 [aws-shell](https://github.com/awslabs/aws-shell)
+* IAM Best Practices
+[iam-best-practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
+1. Prepare to configure AWS CLI
+   <br><i>NB. Do not use the AWS account root user access key. The access key for the AWS account root user gives full access to all resources for all AWS services, including billing information. The permissions cannot be reduce for the AWS account root user access key.</i>
+   1. Create Administrator user [create-admin-user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
 1. Run the `aws configure` command to configure the AWS CLI
    <br><i>NB. The command prompts for: access key, secret access key, AWS Region, and output format; stores this in a profile ("default"), this is used when running  an AWS CLI command without explicitly specify another profile.</i>
     ```
