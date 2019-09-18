@@ -36,6 +36,7 @@
     Would you like to create one? (Y/n)?  n
 
     ```
+***
 * Use the `gcloud` or `gsutil` command to perform operations, or use the [Cloud Console](https://console.cloud.google.com)
 ```
 $ LC_CTYPE=C gcloud info
