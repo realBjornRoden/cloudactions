@@ -39,6 +39,7 @@
    
    An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied
    ```
+***
 * Use the `aws` command to perform operations, or use the [`aws-shell`](https://github.com/awslabs/aws-shell) or the [AWS Console](https://console.aws.amazon.com/)
 ```
 $ aws 
