@@ -1,5 +1,4 @@
 ## Topics
-***
 * Login access with SSH
    * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/login/README.md)
    * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/login/README.md)
