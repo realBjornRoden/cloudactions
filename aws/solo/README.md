@@ -206,7 +206,7 @@
 ```
 * Prepare deciding the VM size using the `XXX` command, in this case selecting only 't2.micro' 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
-<b><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>
+<br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>
 ```
    $ aws pricing get-attribute-values --region us-east-1 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
 t2.2xlarge
