@@ -34,12 +34,22 @@
     1. Verify access to AWS with the USER (`ec2admin`), for EC2 (accepted) and S3 (denied)
    ```
    $ aws ec2 describe-instances --region us-east-1
+   
    $ aws s3 ls
    
    An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied
    ```
 * Use the `aws` command to perform operations, or use the [`aws-shell`](https://github.com/awslabs/aws-shell) or the [AWS Console](https://console.aws.amazon.com/)
 ```
+$ aws 
+usage: aws [options] <command> <subcommand> [<subcommand> ...] [parameters]
+To see help text, you can run:
+
+aws help
+aws <command> help
+aws <command> <subcommand> help
+aws: error: the following arguments are required: command
+
 $ aws help
 AWS()                                                                    AWS()
 
@@ -132,6 +142,10 @@ The maximum socket connect time in seconds. If the value is set  to  0,
 the socket connect will be blocking and not timeout.
 
 AVAILABLE SERVICES
+...
+o ec2
+...
+o s3
 ...
 
 SEE ALSO
