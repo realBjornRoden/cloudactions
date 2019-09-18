@@ -6,22 +6,38 @@
 [aws-shell](https://github.com/awslabs/aws-shell)
 * IAM Best Practices
 [iam-best-practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+* IAM EC2 Roles [ec2-roles](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
+* IAM Job Roles [job-roles](https://docs.aws.amazon.com/en_pv/IAM/latest/UserGuide/access_policies_job-functions.html)
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Prepare to configure AWS CLI
    <br><i>NB. Do not use the AWS account root user access key. The access key for the AWS account root user gives full access to all resources for all AWS services, including billing information. The permissions cannot be reduce for the AWS account root user access key.</i>
-   1. Create Administrator user [create-admin-user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
-1. Run the `aws configure` command to configure the AWS CLI
+   1. Create a GROUP in the Console, such as `ec2admin`, and assign `AmazonEC2FullAccess` as Policy [create-admin-group](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
+   <br>Select one or more policies to attach. Each group can have up to 10 policies attached.
+   1. Create a USER in the Console, such as `ec2admin`, assign it to the GROUP, and save the `credentials.csv` file (store and keep it secret) [create-admin-user](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started_create-admin-group.html)
+   1. Set a PASSWORD for the user [aws-password](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_admin-change-user.html)
+1. Run the `aws configure` command to configure the AWS CLI using the keys for the USER (`ec2admin`)
    <br><i>NB. The command prompts for: access key, secret access key, AWS Region, and output format; stores this in a profile ("default"), this is used when running  an AWS CLI command without explicitly specify another profile.</i>
     ```
     $ aws configure
-    AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
-    AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-    Default region name [None]: us-east-2
-    Default output format [None]: json
-    $ ls -ltr
+    aws configure
+    AWS Access Key ID [None]: AKIAYWZGLN25PCXEFF3G
+    AWS Secret Access Key [None]: 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
+    Default region name [None]: 
+    Default output format [None]: text
 
+   $ cat ~/.aws/credentials
+   [default]
+   aws_access_key_id = AKIAYWZGLN25PCXEFF3G
+   aws_secret_access_key = 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
     ```
+    1. Verify access to AWS with the USER (`ec2admin`), for EC2 (accepted) and S3 (denied)
+   ```
+   $ aws ec2 describe-instances --region us-east-1
+   $ aws s3 ls
+   
+   An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied
+   ```
 * Use the `aws` command to perform operations, or use the [`aws-shell`](https://github.com/awslabs/aws-shell) or the [AWS Console](https://console.aws.amazon.com/)
 ```
 $ aws help
