@@ -1,5 +1,5 @@
 # Login
-* The  Command-Line Interface (CLI) 
+* Command-Line Interface (CLI) 
 [aws-cli](https://aws.amazon.com/cli/) & 
 [aws-cli-configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
 * The AWS Shell 
