@@ -1,13 +1,13 @@
 # Login
-* The  Command-Line Interface (CLI)<br>
-[aws-cli](https://aws.amazon.com/cli/)<br>
+* The  Command-Line Interface (CLI) 
+[aws-cli](https://aws.amazon.com/cli/) & 
 [aws-cli-configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
-* The AWS Shell<br>
+* The AWS Shell 
 [aws-shell](https://github.com/awslabs/aws-shell)
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Run the `aws configure` command to configure the AWS CLI
-   -NB- The command prompts for: access key, secret access key, AWS Region, and output format; stores this in a profile ("default"), this is used when running  an AWS CLI command without explicitly specify another profile.
+   <br><i>NB. The command prompts for: access key, secret access key, AWS Region, and output format; stores this in a profile ("default"), this is used when running  an AWS CLI command without explicitly specify another profile.</i>
     ```
     $ aws configure
     AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
