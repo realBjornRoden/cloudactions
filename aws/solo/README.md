@@ -155,7 +155,7 @@
 * Use the `XXX` command to start a stopped or deallocated VM
    ```
    ```
-1. Use the `XXX` command to delete a VM
+* Use the `XXX` command to delete a VM
     ```
     ```
 ***
@@ -204,35 +204,32 @@
    |  ec2.us-west-2.amazonaws.com      |  us-west-2       |
    +-----------------------------------+------------------+
 ```
-* Prepare deciding the VM size using the `XXX` command, in this case selecting only 't2.micro' 
+* Prepare deciding the VM size using the `XXX` command, in this case selecting only `t2.micro` 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
 <br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>
 ```
    $ aws pricing get-attribute-values --region us-east-1 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
-t2.2xlarge
-t2.large
-t2.medium
-t2.micro
-t2.nano
-t2.small
-t2.xlarge
-
+   t2.2xlarge
+   t2.large
+   t2.medium
+   t2.micro
+   t2.nano
+   t2.small
+   t2.xlarge
 ```
-* Prepare deciding the VM IMAGE using the `aws ec2 describe-images` command (region specific), in this case selecting only 'ami-hvm-2.0' Amazon Machine Image (ami) Hardware Virtualized Machine (hvm) v2.0
+* Prepare deciding the VM IMAGE using the `aws ec2 describe-images` command (region specific), in this case selecting only `ami-hvm-2.0` Amazon Machine Image (ami) Hardware Virtualized Machine (hvm) v2.0
 ```
    $ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=amzn2-ami-hvm-2.0.????????-x86_64-gp2' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
    ami-0b898040803850657
 
    $ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=*ami-hvm-2.0*' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
    ami-0b69ea66ff7391e80
-
-
 ```
 * Prepare deciding the ADMIN account using the `XXX` command with `--query` option
 ```
 ```
 ***
 
-* Use the `XXX` command to show options
+* Use the `aws ec2 help` command to show options
 ```
 ```
