@@ -1,21 +1,12 @@
-# Create SOLO CentOS Linux Virtual Machine (VM)
+# Create SOLO AMIv2 Linux Virtual Machine (VM)
 * Command-Line Interface (CLI) [aws-cli](https://aws.amazon.com/cli/)
 * JSON Query (jq) [jq-github-io](https://stedolan.github.io/jq/)
 
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
-1. Run the `XXX` command to authenticate through the webui using an Account and Password
-    ```
-    $ XXX login
-    ```
-1. Use the `XXX` command to create a RESOURCE GROUP to host the VM and its other resources
-    ```
+1. Ensure login key configuration is made with  the `aws configure`
+1. Use the `aws ec2 run-instances` command to create a VM; by default SSH will be allowed (firewall rule `XXXX`) [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
    ```
-1. Use the `XXX` command to display available RESOURCE GROUPS
-    ```
-    ```
-1. Use the `XXX` command to create a VM; by default SSH will be allowed (firewall rule `XXXX`)
-    ```
     ```
 1. Use the `XXX` command to display IP-address of the VM
     ```
@@ -143,19 +134,19 @@
    $ curl --silent -q http://13.92.112.221:80 | grep -i welcome
    ```
 ***
-* Use the `XXX` command to shutdown a VM
+* Use the `aws ec2 stop-instances` command to shutdown a VM
 ```
 ```
-* Use the `XXX` command to deallocate a VM
+* Use the `aws ec2 stop-instances --hibernate` command to hibernate a VM
 ```
 ```
 * Use the `aws ec2 terminate-instances` command to delete a VM
 ```
 ```
-* Use the `XXX` command to start a stopped or deallocated VM
+* Use the `aws ec2 start-instances` command to start a stopped or hibernated VM
 ```
 ```
-* Use the `XXX` command to delete a VM
+* Use the `aws ec2 stop-instances` command to delete a VM
  ```
 ```
 ***
@@ -204,7 +195,7 @@ t2.xlarge
 $ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=amzn2-ami-hvm-2.0.????????-x86_64-gp2' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
 ami-0b898040803850657
 
-$ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=*ami-hvm-2.0*' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
+$ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=*ami-hvm-2.?*' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
 ami-0b69ea66ff7391e80
 ```
 * Prepare deciding the ADMIN account using the `XXX` command with `--query` option
