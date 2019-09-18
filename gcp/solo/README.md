@@ -1,7 +1,5 @@
 # Create SOLO Debian Linux Virtual Machine (VM)
-* The  Command-Line Interface (CLI)
-[XXX](XXXX)
-
+* The  Command-Line Interface ([CLI](https://cloud.google.com/sdk/docs/))
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 
@@ -23,7 +21,6 @@
    
    To set the active account, run:
    $ gcloud config set account `ACCOUNT`
-
    ```
 1. Run the `gcloud init` to authenticate through the webui using an Account and Password
     ```
@@ -43,7 +40,6 @@
     Enabling service [cloudapis.googleapis.com] on project [project-01-31482]...
     Operation "operations/acf.7e200ba6-d443-43f0-9857-c3dce48a349f" finished successfully.
     Updated property [core/project] to [project-01-31482].
-
    ```
 1. Display current projects on the account `gcloud projects list`
    ```
@@ -155,7 +151,6 @@
    Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
    permitted by applicable law.
    bjro@vm-solo-03:~$ 
-   
    ```
    Customize the login environment on the VM
    ```
@@ -211,7 +206,6 @@
    bjro@vm-solo-03:~$ curl --silent -q http://10.142.0.4:80 | grep -i welcome
    <title>Welcome to nginx!</title>
    <h1>Welcome to nginx!</h1>
-  
    ```
    Open port 80 for the VM with the associated SG ( Security Group); verify access
    ```
@@ -256,7 +250,6 @@
    Password updated successfully!
    Reloading privilege tables..
    ... Success!
-   
    
    By default, a MariaDB installation has an anonymous user, allowing anyone
    to log into MariaDB without having to have a user account created for
@@ -431,7 +424,6 @@ f1-micro  us-east1-b  1     0.60
 f1-micro  us-east4-a  1     0.60
 f1-micro  us-east4-c  1     0.60
 f1-micro  us-east4-b  1     0.60
-
 ```
 * Prepare deciding the VM IMAGE using `gcloud compute images list`, in this case selecting only 'centos' (case sensitive)
 ```
@@ -440,9 +432,7 @@ NAME                PROJECT       FAMILY    DEPRECATED  STATUS
 centos-6-v20190916  centos-cloud  centos-6              READY
 centos-7-v20190916  centos-cloud  centos-7              READY
 ```
-* Prepare deciding the ADMIN account using `XXX` with `--query` option
-```
-```
+
 ***
 
 * Use `gcloud compute --help` to show options
