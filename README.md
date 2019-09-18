@@ -6,6 +6,7 @@
 * Create solo VM
    * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/solo/README.md)
    * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/solo/README.md)
+
 * Add, Change, Remove compute for solo VM
 * Add, Change, Remove storage for solo VM
 * Add, Change, Remove network for solo VM
