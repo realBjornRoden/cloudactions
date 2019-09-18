@@ -20,6 +20,7 @@
 * Maintaining currency of os and software packages on solo VM
 ***
 * Create persistent shared storage independent from VMs
+***
 * Create n-tier VPC VM based design with all resources
 * Create n-tier VPC VM based implementation with all resources
 * Create n-tier VPC Kubernetes based design with all resources
