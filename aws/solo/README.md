@@ -144,86 +144,68 @@
    ```
 ***
 * Use the `XXX` command to shutdown a VM
-    ```
-    ```
+```
+```
 * Use the `XXX` command to deallocate a VM
-   ```
-   ```
+```
+```
 * Use the `aws ec2 terminate-instances` command to delete a VM
-   ```
-   ```
+```
+```
 * Use the `XXX` command to start a stopped or deallocated VM
-   ```
-   ```
+```
+```
 * Use the `XXX` command to delete a VM
-    ```
-    ```
+ ```
+```
 ***
 
-* Prepare deciding the location for the VM using the `aws ec2 describe-regions` command (if no default region is configured, specify one to access the information from); will show the regions  that  are  currently available (enabled for the account) [aws-](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
-```
-   $ aws ec2 describe-regions --region us-east-1 --query "Regions[]" --output text
-   ec2.eu-north-1.amazonaws.com    eu-north-1
-   ec2.ap-south-1.amazonaws.com    ap-south-1
-   ec2.eu-west-3.amazonaws.com    eu-west-3
-   ec2.eu-west-2.amazonaws.com    eu-west-2
-   ec2.eu-west-1.amazonaws.com    eu-west-1
-   ec2.ap-northeast-2.amazonaws.com    ap-northeast-2
-   ec2.ap-northeast-1.amazonaws.com    ap-northeast-1
-   ec2.sa-east-1.amazonaws.com    sa-east-1
-   ec2.ca-central-1.amazonaws.com    ca-central-1
-   ec2.ap-southeast-1.amazonaws.com    ap-southeast-1
-   ec2.ap-southeast-2.amazonaws.com    ap-southeast-2
-   ec2.eu-central-1.amazonaws.com    eu-central-1
-   ec2.us-east-1.amazonaws.com    us-east-1
-   ec2.us-east-2.amazonaws.com    us-east-2
-   ec2.us-west-1.amazonaws.com    us-west-1
-   ec2.us-west-2.amazonaws.com    us-west-2
-   
-   $ aws ec2 describe-regions --region us-east-1 --query "Regions[]" --output table
-   --------------------------------------------------------
-   |                    DescribeRegions                   |
-   +-----------------------------------+------------------+
-   |             Endpoint              |   RegionName     |
-   +-----------------------------------+------------------+
-   |  ec2.eu-north-1.amazonaws.com     |  eu-north-1      |
-   |  ec2.ap-south-1.amazonaws.com     |  ap-south-1      |
-   |  ec2.eu-west-3.amazonaws.com      |  eu-west-3       |
-   |  ec2.eu-west-2.amazonaws.com      |  eu-west-2       |
-   |  ec2.eu-west-1.amazonaws.com      |  eu-west-1       |
-   |  ec2.ap-northeast-2.amazonaws.com |  ap-northeast-2  |
-   |  ec2.ap-northeast-1.amazonaws.com |  ap-northeast-1  |
-   |  ec2.sa-east-1.amazonaws.com      |  sa-east-1       |
-   |  ec2.ca-central-1.amazonaws.com   |  ca-central-1    |
-   |  ec2.ap-southeast-1.amazonaws.com |  ap-southeast-1  |
-   |  ec2.ap-southeast-2.amazonaws.com |  ap-southeast-2  |
-   |  ec2.eu-central-1.amazonaws.com   |  eu-central-1    |
-   |  ec2.us-east-1.amazonaws.com      |  us-east-1       |
-   |  ec2.us-east-2.amazonaws.com      |  us-east-2       |
-   |  ec2.us-west-1.amazonaws.com      |  us-west-1       |
-   |  ec2.us-west-2.amazonaws.com      |  us-west-2       |
-   +-----------------------------------+------------------+
+* Prepare deciding the location for the VM using the `aws ec2 describe-regions` command (if no default region is configured, specify one to access the information from); will show the regions  that  are  currently available (enabled for the account) [aws-regions](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
+ ```
+$ aws ec2 describe-regions --region us-east-1 --query "Regions[]" --output table
+--------------------------------------------------------
+|                    DescribeRegions                   |
++-----------------------------------+------------------+
+|             Endpoint              |   RegionName     |
++-----------------------------------+------------------+
+|  ec2.eu-north-1.amazonaws.com     |  eu-north-1      |
+|  ec2.ap-south-1.amazonaws.com     |  ap-south-1      |
+|  ec2.eu-west-3.amazonaws.com      |  eu-west-3       |
+|  ec2.eu-west-2.amazonaws.com      |  eu-west-2       |
+|  ec2.eu-west-1.amazonaws.com      |  eu-west-1       |
+|  ec2.ap-northeast-2.amazonaws.com |  ap-northeast-2  |
+|  ec2.ap-northeast-1.amazonaws.com |  ap-northeast-1  |
+|  ec2.sa-east-1.amazonaws.com      |  sa-east-1       |
+|  ec2.ca-central-1.amazonaws.com   |  ca-central-1    |
+|  ec2.ap-southeast-1.amazonaws.com |  ap-southeast-1  |
+|  ec2.ap-southeast-2.amazonaws.com |  ap-southeast-2  |
+|  ec2.eu-central-1.amazonaws.com   |  eu-central-1    |
+|  ec2.us-east-1.amazonaws.com      |  us-east-1       |
+|  ec2.us-east-2.amazonaws.com      |  us-east-2       |
+|  ec2.us-west-1.amazonaws.com      |  us-west-1       |
+|  ec2.us-west-2.amazonaws.com      |  us-west-2       |
++-----------------------------------+------------------+
 ```
 * Prepare deciding the VM size using the `XXX` command, in this case selecting only `t2.micro` 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
 <br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>
-```
-   $ aws pricing get-attribute-values --region us-east-1 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
-   t2.2xlarge
-   t2.large
-   t2.medium
-   t2.micro
-   t2.nano
-   t2.small
-   t2.xlarge
+   ```
+$ aws pricing get-attribute-values --region us-east-1 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
+t2.2xlarge
+t2.large
+t2.medium
+t2.micro
+t2.nano
+t2.small
+t2.xlarge
 ```
 * Prepare deciding the VM IMAGE using the `aws ec2 describe-images` command (region specific), in this case selecting only `ami-hvm-2.0` Amazon Machine Image (ami) Hardware Virtualized Machine (hvm) v2.0
 ```
-   $ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=amzn2-ami-hvm-2.0.????????-x86_64-gp2' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
-   ami-0b898040803850657
+$ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=amzn2-ami-hvm-2.0.????????-x86_64-gp2' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
+ami-0b898040803850657
 
-   $ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=*ami-hvm-2.0*' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
-   ami-0b69ea66ff7391e80
+$ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=*ami-hvm-2.0*' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
+ami-0b69ea66ff7391e80
 ```
 * Prepare deciding the ADMIN account using the `XXX` command with `--query` option
 ```
