@@ -31,7 +31,7 @@
    aws_access_key_id = AKIAYWZGLN25PCXEFF3G
    aws_secret_access_key = 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
     ```
-    1. Verify access to AWS with the USER (`ec2admin`), for EC2 (accepted) and S3 (denied)
+1. Verify access to AWS with the USER (`ec2admin`), for EC2 (accepted) and S3 (denied)
    ```
    $ aws ec2 describe-instances --region us-east-1
    
