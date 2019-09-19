@@ -14,7 +14,7 @@
    $ aws ec2 create-key-pair --key-name ec2-vmadmin-key --region us-east-2 > ec2-vmadmin-key.pem
    $ chmod 400 ec2-vmadmin-key.pem
    ```
-1. Use the `aws ec2 run-instances` to create a VM; by default ALL will be allowed (firewall rule `XXXX`) [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
+1. Use the `aws ec2 run-instances` to create a VM; by default ALL ingress and egress will be allowed [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
    ```   
    $ aws ec2 run-instances --region us-east-2 --image-id ami-00c03f7f7f2ec15c3 --instance-type t2.micro --key-name ec2-vmadmin-key --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=vm-solo-03}]' --output json > vm-solo-03.json
     ```
@@ -80,9 +80,13 @@
    ```
    Open port 80 for the VM with the associated SG ( Security Group); verify access
    ```
-   $ 
+   $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
+   i-0e5641b24d9618aa8
+   GROUPS    sg-ebf9c788
+   
+   $ aws ec2 authorize-security-group-ingress --group-id sg-ebf9c788 --protocol tcp --port 80 --cidr "0.0.0.0/0" --region us-east-2
   
-   $ curl --silent -q http://40.87.10.112:80 | grep -i welcome
+   $ curl --silent -q http://3.16.167.39:80 | grep -i welcome
    ```
    Continue customize the VM...
    ```
@@ -92,7 +96,7 @@
    ```
    Clone the VM; deploy the cloned image of the VM; open firewall port 80; verify
    ```
-   $ curl --silent -q http://13.92.112.221:80 | grep -i welcome
+   $ curl --silent -q http://3.16.167.39:80 | grep -i welcome
    ```
 ***
 * Use the `aws ec2 start-instances` to start a stopped VM
