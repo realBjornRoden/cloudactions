@@ -1,161 +1,119 @@
 # Create SOLO AMIv2 Linux Virtual Machine (VM)
+* [AWS Documentation](https://docs.aws.amazon.com/index.html)
 * Command-Line Interface (CLI) [aws-cli](https://aws.amazon.com/cli/)
 * JSON Query (jq) [jq-github-io](https://stedolan.github.io/jq/)
+* Launch a Linux Virtual Machine with Amazon EC2 [10-Minute Tutorials](https://aws.amazon.com/getting-started/tutorials/launch-a-virtual-machine/)
 
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
-1. Ensure login key configuration is made with  the `aws configure`
-1. (<i>optional)</i> Use the `aws ec2 create-placement-group` to create a PLACEMENT GROUP [aws-ec2-pg](https://docs.aws.amazon.com/cli/latest/reference/ec2/create-placement-group.html)
-   ```
-   $ aws ec2 create-placement-group --group-name pg-useast-01 --strategy partition --partition-count 1 --region us-east-1
-   ```
-1. Use the `aws ec2 run-instances` command to create a VM; by default SSH will be allowed (firewall rule `XXXX`) [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
-   ```
-    ```
-1. Use the `XXX` command to display IP-address of the VM
-    ```
-    ```
-1. Use the `XXX` command to display the account resources
-    ```
-    ```
-1. Use the `XXX` command to display the VM DISK ID
-    ```
-    ```
 
-1. Use SSH to login to the VM
+1. Ensure login key configuration is made with  the `aws configure` for the user with sufficient Policy permissions
+
+1. Create SSH key pair with  `aws ec2 create-key-pair` 
    ```
-   $ ssh 40.87.10.112
+   $ aws ec2 create-key-pair --key-name ec2-vmadmin-key --region us-east-2 > ec2-vmadmin-key.pem
+   $ chmod 400 ec2-vmadmin-key.pem
+   ```
+1. Use the `aws ec2 run-instances` to create a VM; by default SSH will be allowed (firewall rule `XXXX`) [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
+   ```   
+   $ aws ec2 run-instances --region us-east-2 --image-id ami-00c03f7f7f2ec15c3 --instance-type t2.micro --key-name ec2-vmadmin-key --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=vm-solo-03}]' --output json > vm-solo-03.json
+    ```
+1. Use the `aws ec2 describe-instances` command to display details of the VM
+[cli-usage-output](https://docs.aws.amazon.com/en_pv/cli/latest/userguide/cli-usage-output.html)
+    ```
+    $ aws ec2 describe-instances --region us-east-2 --query 'Reservations[*].Instances[*].{"2.Instance":InstanceId,"5.AvailabilityZone":Placement.AvailabilityZone,"1.Name":Tags[?Key==`Name`]|[0].Value,"3.InstanceType":InstanceType,"7.PrivateIpAddress":PrivateIpAddress,"8.PublicIpAddress":PublicIpAddress,"6.State":State.Name,"9.Hypervisor":Hypervisor,"4.Processors":CpuOptions.CoreCount}' --output table
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    |                                                                         DescribeInstances                                                                         |
+    +------------+----------------------+-----------------+---------------+---------------------+----------+---------------------+---------------------+----------------+
+    |   1.Name   |     2.Instance       | 3.InstanceType  | 4.Processors  | 5.AvailabilityZone  | 6.State  | 7.PrivateIpAddress  |  8.PublicIpAddress  | 9.Hypervisor   |
+    +------------+----------------------+-----------------+---------------+---------------------+----------+---------------------+---------------------+----------------+
+    |  vm-solo-03|  i-06ada2bc32da15446 |  t2.micro       |  1            |  us-east-2b         |  running |  172.31.30.25       |  18.189.21.160      |  xen           |
+    +------------+----------------------+-----------------+---------------+---------------------+----------+---------------------+---------------------+----------------+
+   ```
+1. Use the `aws ec2 describe-instances` or the `aws ec2 describe-network-interfaces` commands to display IP-address of VMs
+    ```
+    $ aws ec2 describe-instances --region us-east-2 --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`]|[0].Value,InstanceId,PrivateIpAddress,PublicIpAddress]' --output text
+    vm-solo-03    i-06ada2bc32da15446    172.31.30.25    18.189.21.160    running
+
+    $ aws ec2 describe-network-interfaces --region us-east-2 --query 'NetworkInterfaces[*].[Attachment.InstanceId,PrivateIpAddress,Association.PublicIp]' --output text
+    i-06ada2bc32da15446    172.31.30.25    18.189.21.160
+    
+    $ alias lsvm="aws ec2 describe-instances --region us-east-2 --query 'Reservations[*].Instances[*].[Tags[?Key==\`Name\`]|[0].Value,InstanceId,PrivateIpAddress,PublicIpAddress,Placement.AvailabilityZone,State.Name]' --output text"
+    
+    $ awslsvm
+    vm-solo-00    i-06ada2bc32da15446    172.31.30.25    18.189.21.160
+
+    ```
+1. Use the `aws ec2 describe-volumes` command to display the VM DISK ID
+    ```
+    $ AWS_DEFAULT_OUTPUT=table aws ec2 describe-volumes --region us-east-2 --query 'Volumes[*].[Attachments[0].InstanceId,AvailabilityZone,VolumeId,Size]'
+    i-06ada2bc32da15446    us-east-2b    vol-0cc41c407d9deb7eb    8
+    ```
+1. Use SSH to login to the VM
+<br><i>NB. Use the default [user name] (https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/connection-prereqs.html#connection-prereqs-get-info-about-instance), such as `ec2-user`</i>
+   ```
+   $ ssh -v -v -v -i "ec2-vmadmin-key.pem" ec2-user@ec2-3-16-167-39.us-east-2.compute.amazonaws.com
+   OpenSSH_7.9p1, LibreSSL 2.7.3
+   debug1: Reading configuration data /etc/ssh/ssh_config
+   debug1: /etc/ssh/ssh_config line 48: Applying options for *
+   debug1: Connecting to ec2-3-16-167-39.us-east-2.compute.amazonaws.com port 22.
+   ssh: connect to host ec2-3-16-167-39.us-east-2.compute.amazonaws.com port 22: Operation timed out
    ```
    Customize the login environment on the VM
    ```
-   [bjro@vm-solo-03 ~]$ cat >> .bashrc
-   export LC_CTYPE=C
-   export PS1="\u@\h:\w $ "
-   set -o vi
-   <CTRL-D>
-  
-   [bjro@vm-solo-03 ~]$ . ./.bashrc
-  
-   bjro@vm-solo-03:~ $ sudo yum -y update
-   
-   root@vm-solo-03:~ $ uname -a
-
-   root@vm-solo-03:~ $ egrep -i 'processor|model n|cpu [mc]|flags' /proc/cpuinfo
-
-   ```
-   Customize the VM, such as installing software and basic verification that it's working
-   ```
-   bjro@vm-solo-03:~ $ sudo yum -y install gcc
-   
-   bjro@vm-solo-03:~ $ gcc --version
-   
-   bjro@vm-solo-03:~ $ python --version
-   
-   bjro@vm-solo-03:~ $ sudo bash
-   
-   root@vm-solo-03:/home/bjro $ cat > /etc/yum.repos.d/nginx.repo
-   [nginx]
-   name=nginx repo
-   baseurl=http://nginx.org/packages/mainline/centos/7/$basearch/
-   gpgcheck=0
-   enabled=1
-   
-   root@vm-solo-03:/home/bjro $ yum -y install nginx
-   
-   root@vm-solo-03:/home/bjro $ systemctl enable nginx
-   
-   root@vm-solo-03:/home/bjro $ systemctl start nginx
-   
-   root@vm-solo-03:/home/bjro $ netstat -an|grep 'tcp.*80'
-   
-   root@vm-solo-03:/home/bjro $ curl --silent -q http://40.87.10.112:80 | grep -i welcome
-  
-   bjro@vm-solo-03:~ $ firewall-cmd --state
-
-   bjro@vm-solo-03:~ $ exit
    ```
    Open port 80 for the VM with the associated SG ( Security Group); verify access
    ```
-   $ az vm open-port --port 80 --resource-group rg-eastus-01 --name vm-solo-03 --output table
+   $ 
   
    $ curl --silent -q http://40.87.10.112:80 | grep -i welcome
    ```
    Continue customize the VM...
    ```
-   $ ssh 40.87.10.112
+   $ ssh -v -v -v -i "ec2-vmadmin-key.pem" ec2-user@ec2-3-16-167-39.us-east-2.compute.amazonaws.com
      
-   bjro@vm-solo-03:~ $ sudo systemctl start mariadb
-   bjro@vm-solo-03:~ $ sudo systemctl enable mariadb
-
-   bjro@vm-solo-03:~ $ awk -F: '{printf "%d,%s\n",$3,$1}' /etc/passwd >/tmp/users.csv
-   
-   bjro@vm-solo-03:~ $ mysql -u root -p
-   
-   MariaDB [(none)]> CREATE DATABASE userdb;
-   Query OK, 1 row affected (0.00 sec)
-   
-   MariaDB [(none)]> MariaDB [(none)]> USE userdb;
-   Database changed
-   
-   MariaDB [userdb]> CREATE TABLE IF NOT EXISTS users (
-    ->     id INT PRIMARY KEY,
-    ->     name VARCHAR(8) NOT NULL,
-    ->     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    -> ); 
-   Query OK, 0 rows affected (0.02 sec)
-   
-   MariaDB [userdb]> LOAD DATA LOCAL INFILE "/tmp/users.csv"
-       -> INTO TABLE users
-       -> FIELDS TERMINATED BY ","
-       -> LINES TERMINATED BY "\n" ;
-   Query OK, 27 rows affected, 29 warnings (0.01 sec)   
-   Records: 27  Deleted: 0  Skipped: 0  Warnings: 29
-   
-   MariaDB [userdb]> SELECT * FROM users;
-   +------+----------+---------------------+
-   | id   | name     | created_at          |
-   +------+----------+---------------------+
-   |    0 | root     | 2019-09-17 13:19:41 |
-   |    1 | bin      | 2019-09-17 13:19:41 |
-   |    2 | daemon   | 2019-09-17 13:19:41 |
-   |    3 | adm      | 2019-09-17 13:19:41 |
-   ...
-   | 1000 | bjro     | 2019-09-17 13:19:41 |
-   +------+----------+---------------------+
-   27 rows in set (0.00 sec)
-
-   MariaDB [userdb]> DROP TABLE users;
-   Query OK, 0 rows affected (0.00 sec)
-   
-   MariaDB [userdb]> DROP DATABASE userdb;
-   Query OK, 0 rows affected (0.00 sec)
-   
-   MariaDB [(none)]> exit
-   Bye
+   $
    ```
    Clone the VM; deploy the cloned image of the VM; open firewall port 80; verify
    ```
    $ curl --silent -q http://13.92.112.221:80 | grep -i welcome
    ```
 ***
-* Use the `aws ec2 stop-instances` command to shutdown a VM
+* Use the `aws ec2 start-instances` command to start a stopped VM
 ```
+$ aws ec2 start-instances --instance-id i-06ada2bc32da15446 --region us-east-2
+STARTINGINSTANCES    i-06ada2bc32da15446
+CURRENTSTATE    0    pending
+PREVIOUSSTATE    80    stopped
+```
+* Use the `aws ec2 stop-instances` command to shutdown a VM
+ ```
+$ aws ec2 stop-instances --instance-id i-06ada2bc32da15446 --region us-east-2
+STOPPINGINSTANCES    i-06ada2bc32da15446
+CURRENTSTATE    64    stopping
+PREVIOUSSTATE    16    running
 ```
 * Use the `aws ec2 stop-instances --hibernate` command to hibernate a VM
+<br><i>NB. Require VM type supporting hibernation and configured at launch (`--hibernation-options '{"Configured": true}'`)</i>
 ```
 ```
 * Use the `aws ec2 terminate-instances` command to delete a VM
+<br><i>NB. After the instance is terminated, it remains visible on the console for a short while, and then the entry is deleted</i>
 ```
+$ aws ec2 terminate-instances --instance-id i-091e25934a7da1234 --region us-east-2
+TERMINATINGINSTANCES    i-091e25934a7da1234
+CURRENTSTATE    48    terminated
+PREVIOUSSTATE    80    stopped
+
+$ aws ec2 terminate-instances --instance-id i-06ada2bc32da15446 --region us-east-2
+TERMINATINGINSTANCES    i-06ada2bc32da15446
+CURRENTSTATE    32    shutting-down
+PREVIOUSSTATE    16    running
 ```
-* Use the `aws ec2 start-instances` command to start a stopped or hibernated VM
-```
-```
-* Use the `aws ec2 stop-instances` command to delete a VM
- ```
-```
+
 ***
 
-* Prepare deciding the location for the VM using the `aws ec2 describe-regions` command (if no default region is configured, specify one to access the information from); will show the regions  that  are  currently available (enabled for the account) [aws-regions](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
+* Prepare deciding the VM LOCATION using the `aws ec2 describe-regions` command (if no default region is configured, specify one to access the information from); will show the regions  that  are  currently available (enabled for the account) [aws-regions](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
  ```
 $ aws ec2 describe-regions --region us-east-1 --query "Regions[]" --output table
 --------------------------------------------------------
@@ -181,7 +139,7 @@ $ aws ec2 describe-regions --region us-east-1 --query "Regions[]" --output table
 |  ec2.us-west-2.amazonaws.com      |  us-west-2       |
 +-----------------------------------+------------------+
 ```
-* Prepare deciding the VM size using the `XXX` command, in this case selecting only `t2.micro` 
+* Prepare deciding the VM SIZE using the `XXX` command, in this case selecting only `t2.micro` 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
 <br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>
 ```
@@ -202,11 +160,28 @@ ami-0b898040803850657
 $ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=*ami-hvm-2.?*' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
 ami-0b69ea66ff7391e80
 ```
-* Prepare deciding the ADMIN account using the `XXX` command with `--query` option
-```
-```
 ***
 
 * Use the `aws ec2 help` command to show options
 ```
+NAME
+ec2 -
+
+DESCRIPTION
+Amazon Elastic Compute Cloud (Amazon EC2) provides secure and resizable
+computing capacity in the AWS cloud. Using Amazon  EC2  eliminates  the
+need  to  invest  in  hardware  up front, so you can develop and deploy
+applications faster.
+
+To learn more about Amazon EC2, Amazon EBS, and  Amazon  VPC,  see  the
+following resources:
+
+o Amazon EC2 product page
+o Amazon EC2 documentation
+o Amazon EBS product page
+o Amazon VPC product page
+o Amazon VPC documentation
+
+AVAILABLE COMMANDS
+...
 ```
