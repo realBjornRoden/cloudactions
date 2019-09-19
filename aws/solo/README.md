@@ -14,37 +14,45 @@
    $ aws ec2 create-key-pair --key-name ec2-vmadmin-key --region us-east-2 > ec2-vmadmin-key.pem
    $ chmod 400 ec2-vmadmin-key.pem
    ```
-1. Use the `aws ec2 run-instances` to create a VM; by default SSH will be allowed (firewall rule `XXXX`) [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
+1. Use the `aws ec2 run-instances` to create a VM; by default ALL will be allowed (firewall rule `XXXX`) [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
    ```   
    $ aws ec2 run-instances --region us-east-2 --image-id ami-00c03f7f7f2ec15c3 --instance-type t2.micro --key-name ec2-vmadmin-key --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=vm-solo-03}]' --output json > vm-solo-03.json
     ```
-1. Use the `aws ec2 describe-instances` command to display details of the VM
+1. Use the `aws ec2 describe-instances` to display details of the VM
 [cli-usage-output](https://docs.aws.amazon.com/en_pv/cli/latest/userguide/cli-usage-output.html)
     ```
     $ aws ec2 describe-instances --region us-east-2 --query 'Reservations[*].Instances[*].{"2.Instance":InstanceId,"5.AvailabilityZone":Placement.AvailabilityZone,"1.Name":Tags[?Key==`Name`]|[0].Value,"3.InstanceType":InstanceType,"7.PrivateIpAddress":PrivateIpAddress,"8.PublicIpAddress":PublicIpAddress,"6.State":State.Name,"9.Hypervisor":Hypervisor,"4.Processors":CpuOptions.CoreCount}' --output table
-    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    |                                                                         DescribeInstances                                                                         |
-    +------------+----------------------+-----------------+---------------+---------------------+----------+---------------------+---------------------+----------------+
-    |   1.Name   |     2.Instance       | 3.InstanceType  | 4.Processors  | 5.AvailabilityZone  | 6.State  | 7.PrivateIpAddress  |  8.PublicIpAddress  | 9.Hypervisor   |
-    +------------+----------------------+-----------------+---------------+---------------------+----------+---------------------+---------------------+----------------+
-    |  vm-solo-03|  i-06ada2bc32da15446 |  t2.micro       |  1            |  us-east-2b         |  running |  172.31.30.25       |  18.189.21.160      |  xen           |
-    +------------+----------------------+-----------------+---------------+---------------------+----------+---------------------+---------------------+----------------+
+    ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    |                                                                           DescribeInstances                                                                          |
+    +------------+----------------------+-----------------+---------------+---------------------+-------------+---------------------+---------------------+----------------+
+    |   1.Name   |     2.Instance       | 3.InstanceType  | 4.Processors  | 5.AvailabilityZone  |   6.State   | 7.PrivateIpAddress  |  8.PublicIpAddress  | 9.Hypervisor   |
+    +------------+----------------------+-----------------+---------------+---------------------+-------------+---------------------+---------------------+----------------+
+    |  vm-solo-03|  i-0e5641b24d9618aa8 |  t2.micro       |  1            |  us-east-2b         |  running    |  172.31.26.155      |  3.16.167.39        |  xen           |
+    +------------+----------------------+-----------------+---------------+---------------------+-------------+---------------------+---------------------+----------------+
    ```
-1. Use the `aws ec2 describe-instances` or the `aws ec2 describe-network-interfaces` commands to display IP-address of VMs
+1. Use the `aws ec2 describe-instances` or the `aws ec2 describe-network-interfaces` to display IP-address of VMs
     ```
     $ aws ec2 describe-instances --region us-east-2 --query 'Reservations[*].Instances[*].[Tags[?Key==`Name`]|[0].Value,InstanceId,PrivateIpAddress,PublicIpAddress]' --output text
-    vm-solo-03    i-06ada2bc32da15446    172.31.30.25    18.189.21.160    running
+    vm-solo-03    i-0e5641b24d9618aa8    172.31.26.155    3.16.167.39    running
 
     $ aws ec2 describe-network-interfaces --region us-east-2 --query 'NetworkInterfaces[*].[Attachment.InstanceId,PrivateIpAddress,Association.PublicIp]' --output text
-    i-06ada2bc32da15446    172.31.30.25    18.189.21.160
+    i-0e5641b24d9618aa8    172.31.26.155    3.16.167.39
     
     $ alias lsvm="aws ec2 describe-instances --region us-east-2 --query 'Reservations[*].Instances[*].[Tags[?Key==\`Name\`]|[0].Value,InstanceId,PrivateIpAddress,PublicIpAddress,Placement.AvailabilityZone,State.Name]' --output text"
     
-    $ awslsvm
-    vm-solo-00    i-06ada2bc32da15446    172.31.30.25    18.189.21.160
-
+    $ lsvm
+    vm-solo-03    i-0e5641b24d9618aa8    172.31.26.155    3.16.167.39    us-east-2b    running
     ```
-1. Use the `aws ec2 describe-volumes` command to display the VM DISK ID
+   1. Use the `aws ec2 authorize-security-group-ingress`  to enable SSH access to the VM
+   ```
+   $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
+   i-0e5641b24d9618aa8
+   GROUPS    sg-ebf9c788
+
+   $ aws ec2 authorize-security-group-ingress --group-id sg-ebf9c788 --protocol tcp --port 22 --cidr "0.0.0.0/0" --region us-east-2
+   ```
+
+1. Use the `aws ec2 describe-volumes` to display the VM DISK ID
     ```
     $ AWS_DEFAULT_OUTPUT=table aws ec2 describe-volumes --region us-east-2 --query 'Volumes[*].[Attachments[0].InstanceId,AvailabilityZone,VolumeId,Size]'
     i-06ada2bc32da15446    us-east-2b    vol-0cc41c407d9deb7eb    8
@@ -52,12 +60,20 @@
 1. Use SSH to login to the VM
 <br><i>NB. Use the default [user name] (https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/connection-prereqs.html#connection-prereqs-get-info-about-instance), such as `ec2-user`</i>
    ```
-   $ ssh -v -v -v -i "ec2-vmadmin-key.pem" ec2-user@ec2-3-16-167-39.us-east-2.compute.amazonaws.com
-   OpenSSH_7.9p1, LibreSSL 2.7.3
-   debug1: Reading configuration data /etc/ssh/ssh_config
-   debug1: /etc/ssh/ssh_config line 48: Applying options for *
-   debug1: Connecting to ec2-3-16-167-39.us-east-2.compute.amazonaws.com port 22.
-   ssh: connect to host ec2-3-16-167-39.us-east-2.compute.amazonaws.com port 22: Operation timed out
+   $ ssh -i "ec2-vmadmin-key.pem" ec2-user@ec2-3-16-167-39.us-east-2.compute.amazonaws.com
+   The authenticity of host 'ec2-3-16-167-39.us-east-2.compute.amazonaws.com (3.16.167.39)' can't be established.
+   ECDSA key fingerprint is SHA256:zJIOSADz3yfFt1045eNyS6lgOh4Nd47ATASrehF/UxY.
+   Are you sure you want to continue connecting (yes/no)? yes
+   Warning: Permanently added 'ec2-3-16-167-39.us-east-2.compute.amazonaws.com,3.16.167.39' (ECDSA) to the list of known hosts.
+   
+   __|  __|_  )
+   _|  (     /   Amazon Linux 2 AMI
+   ___|\___|___|
+   
+   https://aws.amazon.com/amazon-linux-2/
+   7 package(s) needed for security, out of 10 available
+   Run "sudo yum update" to apply all updates.
+   [ec2-user@ip-172-31-26-155 ~]$ 
    ```
    Customize the login environment on the VM
    ```
@@ -79,25 +95,25 @@
    $ curl --silent -q http://13.92.112.221:80 | grep -i welcome
    ```
 ***
-* Use the `aws ec2 start-instances` command to start a stopped VM
+* Use the `aws ec2 start-instances` to start a stopped VM
 ```
 $ aws ec2 start-instances --instance-id i-06ada2bc32da15446 --region us-east-2
 STARTINGINSTANCES    i-06ada2bc32da15446
 CURRENTSTATE    0    pending
 PREVIOUSSTATE    80    stopped
 ```
-* Use the `aws ec2 stop-instances` command to shutdown a VM
+* Use the `aws ec2 stop-instances` to shutdown a VM
  ```
 $ aws ec2 stop-instances --instance-id i-06ada2bc32da15446 --region us-east-2
 STOPPINGINSTANCES    i-06ada2bc32da15446
 CURRENTSTATE    64    stopping
 PREVIOUSSTATE    16    running
 ```
-* Use the `aws ec2 stop-instances --hibernate` command to hibernate a VM
+* Use the `aws ec2 stop-instances --hibernate` to hibernate a VM
 <br><i>NB. Require VM type supporting hibernation and configured at launch (`--hibernation-options '{"Configured": true}'`)</i>
 ```
 ```
-* Use the `aws ec2 terminate-instances` command to delete a VM
+* Use the `aws ec2 terminate-instances` to delete a VM
 <br><i>NB. After the instance is terminated, it remains visible on the console for a short while, and then the entry is deleted</i>
 ```
 $ aws ec2 terminate-instances --instance-id i-091e25934a7da1234 --region us-east-2
@@ -113,9 +129,9 @@ PREVIOUSSTATE    16    running
 
 ***
 
-* Prepare deciding the VM LOCATION using the `aws ec2 describe-regions` command (if no default region is configured, specify one to access the information from); will show the regions  that  are  currently available (enabled for the account) [aws-regions](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
+* Prepare deciding the VM LOCATION using the `aws ec2 describe-regions` (if no default region is configured, specify one to access the information from); will show the regions  that  are  currently available (enabled for the account) [aws-regions](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/using-regions-availability-zones.html)
  ```
-$ aws ec2 describe-regions --region us-east-1 --query "Regions[]" --output table
+$ aws ec2 describe-regions --region us-east-2 --query "Regions[]" --output table
 --------------------------------------------------------
 |                    DescribeRegions                   |
 +-----------------------------------+------------------+
@@ -139,11 +155,11 @@ $ aws ec2 describe-regions --region us-east-1 --query "Regions[]" --output table
 |  ec2.us-west-2.amazonaws.com      |  us-west-2       |
 +-----------------------------------+------------------+
 ```
-* Prepare deciding the VM SIZE using the `XXX` command, in this case selecting only `t2.micro` 
+* Prepare deciding the VM SIZE using the `aws pricing get-attribute-values` , in this case selecting only `t2.micro` 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
 <br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>
 ```
-$ aws pricing get-attribute-values --region us-east-1 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
+$ aws pricing get-attribute-values --region us-east-2 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
 t2.2xlarge
 t2.large
 t2.medium
@@ -152,17 +168,51 @@ t2.nano
 t2.small
 t2.xlarge
 ```
-* Prepare deciding the VM IMAGE using the `aws ec2 describe-images` command (region specific), in this case selecting only `ami-hvm-2.0` Amazon Machine Image (ami) Hardware Virtualized Machine (hvm) v2.0
+* Prepare deciding the VM IMAGE using the `aws ec2 describe-images` (region specific), in this case selecting only `ami-hvm-2.0` Amazon Machine Image (ami) Hardware Virtualized Machine (hvm) v2.0
 ```
-$ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=amzn2-ami-hvm-2.0.????????-x86_64-gp2' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
-ami-0b898040803850657
+$ aws ec2 describe-images --region us-east-2 --owners amazon --filters 'Name=name,Values=amzn2-ami-hvm-2.?.????????-x86_64-gp2' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
+ami-0d8f6eb4f641ef691
 
-$ aws ec2 describe-images --region us-east-1 --owners amazon --filters 'Name=name,Values=*ami-hvm-2.?*' 'Name=state,Values=available' --output json | jq -r '.Images | sort_by(.CreationDate) | last(.[]).ImageId'
-ami-0b69ea66ff7391e80
+$ aws ec2 describe-images --image-ids ami-0d8f6eb4f641ef691 --region us-east-2 --output table
+----------------------------------------------------------------------------
+|                              DescribeImages                              |
++--------------------------------------------------------------------------+
+||                                 Images                                 ||
+|+---------------------+--------------------------------------------------+|
+||  Architecture       |  x86_64                                          ||
+||  CreationDate       |  2019-06-19T21:59:15.000Z                        ||
+||  Description        |  Amazon Linux 2 AMI 2.0.20190618 x86_64 HVM gp2  ||
+||  EnaSupport         |  True                                            ||
+||  Hypervisor         |  xen                                             ||
+||  ImageId            |  ami-0d8f6eb4f641ef691                           ||
+||  ImageLocation      |  amazon/amzn2-ami-hvm-2.0.20190618-x86_64-gp2    ||
+||  ImageOwnerAlias    |  amazon                                          ||
+||  ImageType          |  machine                                         ||
+||  Name               |  amzn2-ami-hvm-2.0.20190618-x86_64-gp2           ||
+||  OwnerId            |  137112412989                                    ||
+||  Public             |  True                                            ||
+||  RootDeviceName     |  /dev/xvda                                       ||
+||  RootDeviceType     |  ebs                                             ||
+||  SriovNetSupport    |  simple                                          ||
+||  State              |  available                                       ||
+||  VirtualizationType |  hvm                                             ||
+|+---------------------+--------------------------------------------------+|
+|||                          BlockDeviceMappings                         |||
+||+-----------------------------------+----------------------------------+||
+|||  DeviceName                       |  /dev/xvda                       |||
+||+-----------------------------------+----------------------------------+||
+||||                                 Ebs                                ||||
+|||+-------------------------------+------------------------------------+|||
+||||  DeleteOnTermination          |  True                              ||||
+||||  Encrypted                    |  False                             ||||
+||||  SnapshotId                   |  snap-077085afe6b3ee68d            ||||
+||||  VolumeSize                   |  8                                 ||||
+||||  VolumeType                   |  gp2                               ||||
+|||+-------------------------------+------------------------------------+|||
 ```
 ***
 
-* Use the `aws ec2 help` command to show options
+* Use the `aws ec2 help` to show options
 ```
 NAME
 ec2 -
