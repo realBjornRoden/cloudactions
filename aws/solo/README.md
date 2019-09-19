@@ -78,7 +78,7 @@
    Customize the login environment on the VM
    ```
    ```
-   Open port 80 for the VM with the associated SG ( Security Group); verify access
+   Open port 80 for the VM; verify access
    ```
    $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
    i-0e5641b24d9618aa8
