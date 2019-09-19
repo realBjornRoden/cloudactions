@@ -58,7 +58,7 @@
     i-06ada2bc32da15446    us-east-2b    vol-0cc41c407d9deb7eb    8
     ```
 1. Use SSH to login to the VM
-<br><i>NB. Use the default [user name] (https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/connection-prereqs.html#connection-prereqs-get-info-about-instance), such as `ec2-user`</i>
+<br><i>NB. Use the default [user name] (https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/connection-prereqs.html#connection-prereqs-get-info-about-instance), such as `ec2-user`.</i>
    ```
    $ ssh -i "ec2-vmadmin-key.pem" ec2-user@ec2-3-16-167-39.us-east-2.compute.amazonaws.com
    The authenticity of host 'ec2-3-16-167-39.us-east-2.compute.amazonaws.com (3.16.167.39)' can't be established.
@@ -114,11 +114,11 @@ CURRENTSTATE    64    stopping
 PREVIOUSSTATE    16    running
 ```
 * Use the `aws ec2 stop-instances --hibernate` to hibernate a VM
-<br><i>NB. Require VM type supporting hibernation and configured at launch (`--hibernation-options '{"Configured": true}'`)</i>
+<br><i>NB. Require VM type supporting hibernation and configured at launch (`--hibernation-options '{"Configured": true}'`).</i>
 ```
 ```
 * Use the `aws ec2 terminate-instances` to delete a VM
-<br><i>NB. After the instance is terminated, it remains visible on the console for a short while, and then the entry is deleted</i>
+<br><i>NB. After the instance is terminated, it remains visible on the console for a short while, and then the entry is deleted.</i>
 ```
 $ aws ec2 terminate-instances --instance-id i-091e25934a7da1234 --region us-east-2
 TERMINATINGINSTANCES    i-091e25934a7da1234
@@ -161,7 +161,7 @@ $ aws ec2 describe-regions --region us-east-2 --query "Regions[]" --output table
 ```
 * Prepare deciding the VM SIZE using the `aws pricing get-attribute-values` , in this case selecting only `t2.micro` 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
-<br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>
+<br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP.</i>
 ```
 $ aws pricing get-attribute-values --region us-east-2 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
 t2.2xlarge
