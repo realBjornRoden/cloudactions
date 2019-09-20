@@ -48,14 +48,14 @@
     $ lsvm
     vm-solo-03    i-0e5641b24d9618aa8    172.31.26.155    3.16.167.39    us-east-2b    running
     ```
-   1. Use the `aws ec2 authorize-security-group-ingress`  to enable SSH access to the VM
-      * List the Security Group for the VM
+1. Use the `aws ec2 authorize-security-group-ingress`  to enable SSH access to the VM
+   * List the Security Group for the VM
       ```
       $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
       i-0e5641b24d9618aa8
       GROUPS    sg-ebf9c788
       ```
-      * Display the ingress and egress specification for the VM assigned Security Group
+   * Display the ingress and egress specification for the VM assigned Security Group
       ```
       $ aws ec2 describe-security-groups --group-name default  --region us-east-2
       SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
