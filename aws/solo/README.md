@@ -10,7 +10,7 @@
 1. Ensure login key configuration is made with  the `aws configure` for the user with sufficient Policy permissions
 <br><i>NB. Below is performed with the group set to the policy <b>AmazonEC2FullAccess</b> and for the `aws pricing` the policy  <b>AWSPriceListServiceFullAccess</b> </i>
 
-1. Create SSH key pair with  `aws ec2 create-key-pair` 
+1. Create SSH key pair with  `aws ec2 create-key-pair` and store the secret key `.pem` file securely with need-to-know access only.
    ```
    $ aws ec2 create-key-pair --key-name ec2-vmadmin-key --region us-east-2 > ec2-vmadmin-key.pem
    $ chmod 400 ec2-vmadmin-key.pem
