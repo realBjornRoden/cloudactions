@@ -62,23 +62,23 @@
       IPPERMISSIONSEGRESS    -1
       IPRANGES    0.0.0.0/0
       ```
-      * Display the ingress and egress specification for the `default` Security Group (same as above)
+   * Display the ingress and egress specification for the `default` Security Group (same as above)
       ```
       $ aws ec2 describe-security-groups --group-name default  --region us-east-2
       SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
       IPPERMISSIONSEGRESS    -1
       IPRANGES    0.0.0.0/0
       ```
-      *  Get the workstation Internet external IP-address by probing `ifconfig.co` or equivalent service, if it don't work, temporarily use `--cidr "0.0.0.0/0`"
+   *  Get the workstation Internet external IP-address by probing `ifconfig.co` or equivalent service, if it don't work, temporarily use `--cidr "0.0.0.0/0`"
       ```
       $ curl ifconfig.co # or LANG=C wget -qO- ifconfig.co
       123.204.213.49
       ```
-      * Set the Security Group VM ingress to allow SSH from the workstation Internet external IP-address
+   * Set the Security Group VM ingress to allow SSH from the workstation Internet external IP-address
       ```
       $ aws ec2 authorize-security-group-ingress --group-id sg-ebf9c788 --protocol tcp --port 22 --cidr "123.204.213.49/24" --region us-east-2
       ```
-      * Display the Security Group VM ingress and egress specification for the VM assigned Security Group
+   * Display the Security Group VM ingress and egress specification for the VM assigned Security Group
       ```
       $  aws ec2 describe-security-groups --group-id sg-ebf9c788  --region us-east-2
       SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
