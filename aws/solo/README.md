@@ -8,7 +8,7 @@
 1. Open a command line session using Terminal/xterm/putty or equiv
 
 1. Ensure login key configuration is made with  the `aws configure` for the user with sufficient Policy permissions
-   * Below is with performed with the group set to the policies <b>AmazonEC2FullAccess</b>, <b>IAMFullAccess</b> (for the `describe-regions`) and <b>AWSPriceListServiceFullAccess</b> (for the `aws pricing`)
+   * Below is with performed with the group set to the policies <b>AmazonEC2FullAccess</b> and <b>AWSPriceListServiceFullAccess</b> (for the `aws pricing`)
 
 1. Create SSH key pair with  `aws ec2 create-key-pair` 
    ```
