@@ -1,4 +1,5 @@
 ## Topics
+
 * Login access with SSH
    * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/login/README.md)
    * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/login/README.md)
@@ -12,9 +13,9 @@
 ***
 
 * Using ML and DL NoOps
-   * [Azure]()
-   * [AWS]()
-   * [GCP]()
+   * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/ai/README.md)
+   * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/ai/README.md)
+   * [GCP](https://github.com/realBjornRoden/cloudactions/blob/master/gcp/ai/README.md)
 
 ***
 
