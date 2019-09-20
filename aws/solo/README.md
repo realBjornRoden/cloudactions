@@ -100,7 +100,7 @@
    vpc-5076823b    subnet-7524710f    us-east-2b    172.31.16.0/20    available
    ```
 1. Use the `aws ec2 describe-network-acls` to display the VM SUBNET ACLs (Access Control List)
-<br><i>NB. `Entries[].Egress` indicates whether the rule is an egress rule (applied to traffic leaving the subnet)
+<br><i>NB. `Entries[].Egress` indicates whether the rule is an egress rule (True) traffic leaving the subnet, or an ingress rule (False) traffic arrving to the subnet
    ```
    $ /Users/bjro/code/cloudactions/aws: aws ec2 describe-network-acls --region us-east-2 --query 'NetworkAcls[*].[VpcId,IsDefault,Associations[].NetworkAclId,Associations[].SubnetId,Entries[].CidrBlock,Entries[].Egress,Entries[].Protocol,Entries[].RuleAction,Entries[].IcmpTypeCode[].Code,Entries[].IcmpTypeCode[].Type]' 
    vpc-5076823b    True
