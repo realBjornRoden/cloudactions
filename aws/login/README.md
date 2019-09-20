@@ -1,4 +1,5 @@
 # Login
+* [AWS Documentation](https://docs.aws.amazon.com/index.html)
 * Command-Line Interface (CLI) 
 [aws-cli](https://aws.amazon.com/cli/) & 
 [aws-cli-configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
@@ -8,6 +9,7 @@
 [iam-best-practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 * IAM EC2 Roles [ec2-roles](https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html)
 * IAM Job Roles [job-roles](https://docs.aws.amazon.com/en_pv/IAM/latest/UserGuide/access_policies_job-functions.html)
+
 ## Actions
 1. Open a command line session using Terminal/xterm/putty or equiv
 1. Prepare to configure AWS CLI
@@ -21,15 +23,15 @@
     ```
     $ aws configure
     aws configure
-    AWS Access Key ID [None]: AKIAYWZGLN25DEADBEEF
-    AWS Secret Access Key [None]: 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
+    AWS Access Key ID [None]: DEADBEEFLN25PCXEFF3G
+    AWS Secret Access Key [None]: DEADBEEFPWQVmHGN5HAYZMNwEf4Rw+gF8FIz9MTA
     Default region name [None]: 
     Default output format [None]: text
 
    $ cat ~/.aws/credentials
    [default]
-   aws_access_key_id = AKIAYWZGLN25DEADBEEF
-   aws_secret_access_key = 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
+   aws_access_key_id = DEADBEEFLN25PCXEFF3G
+   aws_secret_access_key = DEADBEEFPWQVmHGN5HAYZMNwEf4Rw+gF8FIz9MTA
     ```
 1. Verify access to AWS with the USER (`ec2admin`), for EC2 (accepted) and S3 (denied)
    ```
