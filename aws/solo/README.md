@@ -49,44 +49,44 @@
     vm-solo-03    i-0e5641b24d9618aa8    172.31.26.155    3.16.167.39    us-east-2b    running
     ```
    1. Use the `aws ec2 authorize-security-group-ingress`  to enable SSH access to the VM
-   * List the Security Group for the VM
-   ```
-   $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
-   i-0e5641b24d9618aa8
-   GROUPS    sg-ebf9c788
-   ```
-   * Display the ingress and egress specification for the VM assigned Security Group
-   ```
-   $ aws ec2 describe-security-groups --group-name default  --region us-east-2
-   SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
-   IPPERMISSIONSEGRESS    -1
-   IPRANGES    0.0.0.0/0
-   ```
-   * Display the ingress and egress specification for the `default` Security Group (same as above)
-   ```
-   $ aws ec2 describe-security-groups --group-name default  --region us-east-2
-   SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
-   IPPERMISSIONSEGRESS    -1
-   IPRANGES    0.0.0.0/0
-   ```
-   *  Get the workstation Internet external IP-address by probing `ifconfig.co` or equivalent service, if it don't work, temporarily use `--cidr "0.0.0.0/0`"
-   ```
-   $ curl ifconfig.co # or LANG=C wget -qO- ifconfig.co
-   123.204.213.49
-   ```
-   * Set the Security Group VM ingress to allow SSH from the workstation Internet external IP-address
-   ```
-   $ aws ec2 authorize-security-group-ingress --group-id sg-ebf9c788 --protocol tcp --port 22 --cidr "123.204.213.49/24" --region us-east-2
-   ```
-   * Display the Security Group VM ingress and egress specification for the VM assigned Security Group
-   ```
-   $  aws ec2 describe-security-groups --group-id sg-ebf9c788  --region us-east-2
-   SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
-   IPPERMISSIONS    22    tcp    22
-   IPRANGES    123.204.213.0/24
-   IPPERMISSIONSEGRESS    -1
-   IPRANGES    0.0.0.0/0
-   ```
+      * List the Security Group for the VM
+      ```
+      $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
+      i-0e5641b24d9618aa8
+      GROUPS    sg-ebf9c788
+      ```
+      * Display the ingress and egress specification for the VM assigned Security Group
+      ```
+      $ aws ec2 describe-security-groups --group-name default  --region us-east-2
+      SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
+      IPPERMISSIONSEGRESS    -1
+      IPRANGES    0.0.0.0/0
+      ```
+      * Display the ingress and egress specification for the `default` Security Group (same as above)
+      ```
+      $ aws ec2 describe-security-groups --group-name default  --region us-east-2
+      SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
+      IPPERMISSIONSEGRESS    -1
+      IPRANGES    0.0.0.0/0
+      ```
+      *  Get the workstation Internet external IP-address by probing `ifconfig.co` or equivalent service, if it don't work, temporarily use `--cidr "0.0.0.0/0`"
+      ```
+      $ curl ifconfig.co # or LANG=C wget -qO- ifconfig.co
+      123.204.213.49
+      ```
+      * Set the Security Group VM ingress to allow SSH from the workstation Internet external IP-address
+      ```
+      $ aws ec2 authorize-security-group-ingress --group-id sg-ebf9c788 --protocol tcp --port 22 --cidr "123.204.213.49/24" --region us-east-2
+      ```
+      * Display the Security Group VM ingress and egress specification for the VM assigned Security Group
+      ```
+      $  aws ec2 describe-security-groups --group-id sg-ebf9c788  --region us-east-2
+      SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
+      IPPERMISSIONS    22    tcp    22
+      IPRANGES    123.204.213.0/24
+      IPPERMISSIONSEGRESS    -1
+      IPRANGES    0.0.0.0/0
+      ```
 1. Use the `aws ec2 describe-volumes` to display the VM DISK ID
     ```
     $ AWS_DEFAULT_OUTPUT=table aws ec2 describe-volumes --region us-east-2 --query 'Volumes[*].[Attachments[0].InstanceId,AvailabilityZone,VolumeId,Size]'
