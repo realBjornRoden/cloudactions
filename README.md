@@ -2,16 +2,24 @@
 * Login access with SSH
    * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/login/README.md)
    * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/login/README.md)
+   * [GCP](https://github.com/realBjornRoden/cloudactions/blob/master/gcp/login/README.md)
 
 * Create solo VM
    * [Azure](https://github.com/realBjornRoden/cloudactions/blob/master/azure/solo/README.md)
    * [AWS](https://github.com/realBjornRoden/cloudactions/blob/master/aws/solo/README.md)
+   * [GCP](https://github.com/realBjornRoden/cloudactions/blob/master/gcp/solo/README.md)
 
-* Add, Change, Remove compute for solo VM
-* Add, Change, Remove storage for solo VM
-* Add, Change, Remove network for solo VM
-* Add, Change, Remove access for solo VM
-* Backup, Restore, Recover solo VM
+***
+
+* Using ML and DL NoOps
+   * [Azure]()
+   * [AWS]()
+   * [GCP]()
+
+***
+
+* Add, Change, Remove compute,storage,network,access for solo VM
+* Clone, Backup, Restore, Recover solo VM
 * Create configuration, utilization monitoring and alerting policies for solo VM
 
 * Migrate solo VM to, from and between Clouds
@@ -21,9 +29,6 @@
 
 * Create persistent shared storage independent from VMs
 
-* Create n-tier VPC VM based design with all resources
-* Create n-tier VPC VM based implementation with all resources
-* Create n-tier VPC Kubernetes based design with all resources
-* Create n-tier VPC Kubernetes based implementation with all resources
+* Create n-tier VPC VM based IaaS design for HTTP/APP/DB
 
-* Using ML and DL NoOps
+* Create n-tier VPC Kubernetes based IaaS design for HTTP/APP/DB
