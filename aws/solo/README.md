@@ -8,15 +8,20 @@
 1. Open a command line session using Terminal/xterm/putty or equiv
 
 1. Ensure login key configuration is made with  the `aws configure` for the user with sufficient Policy permissions
+   * Below is with performed with the group set to the policies <b>AmazonEC2FullAccess</b>, <b>IAMFullAccess</b> (for the `describe-regions`) and <b>AWSPriceListServiceFullAccess</b> (for the `aws pricing`)
 
 1. Create SSH key pair with  `aws ec2 create-key-pair` 
    ```
    $ aws ec2 create-key-pair --key-name ec2-vmadmin-key --region us-east-2 > ec2-vmadmin-key.pem
    $ chmod 400 ec2-vmadmin-key.pem
    ```
-1. Use the `aws ec2 run-instances` to create a VM; by default ALL ingress and egress will be allowed [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
+1. Use the `aws ec2 run-instances` to create a VM; if not specified, the account default Security Group named `default` will apply [aws-ec2-run-instance](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html)
    ```   
    $ aws ec2 run-instances --region us-east-2 --image-id ami-00c03f7f7f2ec15c3 --instance-type t2.micro --key-name ec2-vmadmin-key --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=vm-solo-03}]' --output json > vm-solo-03.json
+   ```
+   Or without a name (in AWS the name is a tag and identification of a VM is through the <i>InstanceId</i>
+   ```
+   $ aws ec2 run-instances --region us-east-2 --image-id ami-0d8f6eb4f641ef691 --instance-type t2.micro --key-name ec2-vmadmin-key
     ```
 1. Use the `aws ec2 describe-instances` to display details of the VM
 [cli-usage-output](https://docs.aws.amazon.com/en_pv/cli/latest/userguide/cli-usage-output.html)
@@ -44,14 +49,44 @@
     vm-solo-03    i-0e5641b24d9618aa8    172.31.26.155    3.16.167.39    us-east-2b    running
     ```
    1. Use the `aws ec2 authorize-security-group-ingress`  to enable SSH access to the VM
+   * List the Security Group for the VM
    ```
    $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
    i-0e5641b24d9618aa8
    GROUPS    sg-ebf9c788
-
-   $ aws ec2 authorize-security-group-ingress --group-id sg-ebf9c788 --protocol tcp --port 22 --cidr "0.0.0.0/0" --region us-east-2
    ```
-
+   * Display the ingress and egress specification for the VM assigned Security Group
+   ```
+   $ aws ec2 describe-security-groups --group-name default  --region us-east-2
+   SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
+   IPPERMISSIONSEGRESS    -1
+   IPRANGES    0.0.0.0/0
+   ```
+   * Display the ingress and egress specification for the `default` Security Group (same as above)
+   ```
+   $ aws ec2 describe-security-groups --group-name default  --region us-east-2
+   SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
+   IPPERMISSIONSEGRESS    -1
+   IPRANGES    0.0.0.0/0
+   ```
+   *  Get the workstation Internet external IP-address by probing `ifconfig.co` or equivalent service, if it don't work, temporarily use `--cidr "0.0.0.0/0`"
+   ```
+   $ curl ifconfig.co # or LANG=C wget -qO- ifconfig.co
+   123.204.213.49
+   ```
+   * Set the Security Group VM ingress to allow SSH from the workstation Internet external IP-address
+   ```
+   $ aws ec2 authorize-security-group-ingress --group-id sg-ebf9c788 --protocol tcp --port 22 --cidr "123.204.213.49/24" --region us-east-2
+   ```
+   * Display the Security Group VM ingress and egress specification for the VM assigned Security Group
+   ```
+   $  aws ec2 describe-security-groups --group-id sg-ebf9c788  --region us-east-2
+   SECURITYGROUPS    default VPC security group    sg-ebf9c788    default    598691507898    vpc-5076823b
+   IPPERMISSIONS    22    tcp    22
+   IPRANGES    123.204.213.0/24
+   IPPERMISSIONSEGRESS    -1
+   IPRANGES    0.0.0.0/0
+   ```
 1. Use the `aws ec2 describe-volumes` to display the VM DISK ID
     ```
     $ AWS_DEFAULT_OUTPUT=table aws ec2 describe-volumes --region us-east-2 --query 'Volumes[*].[Attachments[0].InstanceId,AvailabilityZone,VolumeId,Size]'
@@ -161,9 +196,11 @@ $ aws ec2 describe-regions --region us-east-2 --query "Regions[]" --output table
 ```
 * Prepare deciding the VM SIZE using the `aws pricing get-attribute-values` , in this case selecting only `t2.micro` 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
-<br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP.</i>
+<br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP.</i>, othwerise error:<br>
+`An error occurred (AccessDeniedException) when calling the GetAttributeValues operation: User: arn:aws:iam::598691507898:user/ec2admin is not authorized to perform: pricing:GetAttributeValues`
+
 ```
-$ aws pricing get-attribute-values --region us-east-2 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
+$ aws pricing get-attribute-values --region us-east-1 --service-code=AmazonEC2 --attribute-name=instanceType |awk '/t2\./{print $2}'
 t2.2xlarge
 t2.large
 t2.medium
