@@ -89,9 +89,30 @@
       ```
 1. Use the `aws ec2 describe-volumes` to display the VM DISK ID
     ```
-    $ AWS_DEFAULT_OUTPUT=table aws ec2 describe-volumes --region us-east-2 --query 'Volumes[*].[Attachments[0].InstanceId,AvailabilityZone,VolumeId,Size]'
+    $ aws ec2 describe-volumes --region us-east-2 --query 'Volumes[*].[Attachments[0].InstanceId,AvailabilityZone,VolumeId,Size]'
     i-06ada2bc32da15446    us-east-2b    vol-0cc41c407d9deb7eb    8
     ```
+1. Use the `aws ec2 describe-subnets` to display the VM SUBNETS
+   ```
+   $ aws ec2 describe-subnets --region us-east-2 --query 'Subnets[*].[VpcId,SubnetId,AvailabilityZone,CidrBlock,State]' 
+   vpc-5076823b    subnet-d38e339f    us-east-2c    172.31.32.0/20    available
+   vpc-5076823b    subnet-9da9b5f5    us-east-2a    172.31.0.0/20     available
+   vpc-5076823b    subnet-7524710f    us-east-2b    172.31.16.0/20    available
+   ```
+1. Use the `aws ec2 describe-network-acls` to display the VM SUBNET ACLs (Access Control List)
+<br><i>NB. `Entries[].Egress` indicates whether the rule is an egress rule (applied to traffic leaving the subnet)
+   ```
+   $ /Users/bjro/code/cloudactions/aws: aws ec2 describe-network-acls --region us-east-2 --query 'NetworkAcls[*].[VpcId,IsDefault,Associations[].NetworkAclId,Associations[].SubnetId,Entries[].CidrBlock,Entries[].Egress,Entries[].Protocol,Entries[].RuleAction,Entries[].IcmpTypeCode[].Code,Entries[].IcmpTypeCode[].Type]' 
+   vpc-5076823b    True
+   acl-e865b683    acl-e865b683    acl-e865b683
+   subnet-9da9b5f5    subnet-d38e339f    subnet-7524710f
+   0.0.0.0/0    0.0.0.0/0    0.0.0.0/0    0.0.0.0/0
+   True    True    False    False
+   -1    -1    -1    -1
+   allow    deny    allow    deny
+   ```
+***
+
 1. Use SSH to login to the VM
 <br><i>NB. Use the default [user name] (https://docs.aws.amazon.com/en_pv/AWSEC2/latest/UserGuide/connection-prereqs.html#connection-prereqs-get-info-about-instance), such as `ec2-user`.</i>
    ```
@@ -110,10 +131,10 @@
    Run "sudo yum update" to apply all updates.
    [ec2-user@ip-172-31-26-155 ~]$ 
    ```
-   Customize the login environment on the VM
+   * Customize the login environment on the VM
    ```
    ```
-   Open port 80 for the VM; verify access
+   * Open port 80 for the VM; verify access
    ```
    $ aws ec2 describe-instance-attribute --instance-id i-0e5641b24d9618aa8 --attribute groupSet --region us-east-2
    i-0e5641b24d9618aa8
@@ -123,13 +144,13 @@
   
    $ curl --silent -q http://3.16.167.39:80 | grep -i welcome
    ```
-   Continue customize the VM...
+   * Continue customize the VM...
    ```
    $ ssh -v -v -v -i "ec2-vmadmin-key.pem" ec2-user@ec2-3-16-167-39.us-east-2.compute.amazonaws.com
      
    $
    ```
-   Clone the VM; deploy the cloned image of the VM; open firewall port 80; verify
+   * Clone the VM; deploy the cloned image of the VM; open firewall port 80; verify
    ```
    $ curl --silent -q http://3.16.167.39:80 | grep -i welcome
    ```
@@ -196,7 +217,7 @@ $ aws ec2 describe-regions --region us-east-2 --query "Regions[]" --output table
 ```
 * Prepare deciding the VM SIZE using the `aws pricing get-attribute-values` , in this case selecting only `t2.micro` 
 [ec2-instance-type](https://aws.amazon.com/ec2/instance-types/)
-<br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP.</i>, othwerise error:<br>
+<br><i>NB. Require adding the Policy `AWSPriceListServiceFullAccess` to the GROUP</i>, othwerise error:<br>
 `An error occurred (AccessDeniedException) when calling the GetAttributeValues operation: User: arn:aws:iam::598691507898:user/ec2admin is not authorized to perform: pricing:GetAttributeValues`
 
 ```
